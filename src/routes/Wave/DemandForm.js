@@ -394,21 +394,15 @@ export class TreeChosen extends PureComponent {
         selectedKeys: [],
     }
     onExpand = (expandedKeys) => {
-        // console.log('onExpand', arguments);
-        // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-        // or, you can remove all expanded children keys.
         this.setState({
             expandedKeys,
             autoExpandParent: false,
         });
     }
     onCheck = (checkedKeys, { checked, checkedNodes }) => {
-        // console.log('checkedNodes', checkedNodes);
-        // console.log('checkedKeys', checkedKeys);
         this.setState({ checkedKeys });
     }
     onSelect = (selectedKeys, info) => {
-        // console.log('onSelect', info);
         this.setState({ selectedKeys });
     }
     getKeyGroup = (category, key, sub = 2, arr = []) => {
@@ -433,13 +427,6 @@ export class TreeChosen extends PureComponent {
             this.getKeyGroup(category, key, 2, arr);
             this.props.handleTreeData(arr);
             this.props.handelCancel();
-            /**
-                     * 找出根据selectkey选界点
-                     */
-            // 祖先id
-            // let one = four.substr(0,2)
-            // let two = four.substr(0,4)
-            // let three = four.substr(0,6)
         }
     }
     renderTreeNodes = (data) => {

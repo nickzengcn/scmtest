@@ -1,13 +1,20 @@
 import React from 'react';
 import filter from 'lodash/filter';
 import moment from 'moment';
-import { Select } from 'antd';
+import { Select, Tree } from 'antd';
 import defaultImage from '../assets/defaultimg.jpg';
 import LazyLoad from 'react-lazyload';
 import Ellipsis from '../components/Ellipsis';
+const TreeNode = Tree.TreeNode;
 
 const { Option } = Select;
 
+/**
+ * 
+ * @param {*} tree 数据 
+ * @param {*} level 层级
+ * @param {*} now 当前位置
+ */
 export const getTreeByLevel = (tree, level, now = 1) => {
   if (tree.length !== 0) {
     if (level == now) {
@@ -338,3 +345,45 @@ export const ifNotJudge = (item) => (item == 1 ? '是' : '否');
 
 
 export const renderImage = (url) => <LazyLoadImg style={{width:40,height:40}} src={url} />
+
+/**
+ * 根据层次返回树数据
+ */
+export const retrunLevelTreeData = (data, level=0, now=0) => {
+    if(level==0){
+        return data
+    }else{
+        level--;
+        data
+    }
+}
+
+/**
+ * scm 根据category返回界点
+ * @param {*} data 
+ */
+export const returnTreeNodes = (data,level=100) => {
+    if (data) {
+        return data.map((item) => {
+            if ( item.children.length > 0 && item.categoryid.toString().length<=level) {
+                return (
+                    <TreeNode title={item.categoryname} selectable={false} key={item.categoryid} dataRef={item}>
+                        {returnTreeNodes(item.children,level)}
+                    </TreeNode>
+                );
+            }
+            return <TreeNode title={item.categoryname} isLeaf key={item.categoryid} dataRef={item} />;
+        });
+    }
+}
+
+export const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 8 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 12 },
+    },
+  };
