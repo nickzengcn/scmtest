@@ -1,6 +1,6 @@
 import { getDictListByParames, deleteDictById, editDictByParames } from '../services/api';
 
-const namespace = 'dictColour';
+const namespace = 'spendMeter';
 
 export default {
     namespace,
@@ -13,7 +13,7 @@ export default {
             data: {},
             modal: false,
         },
-        defaultType:'dictColour/fetch',
+        defaultType:'spendMeter/fetch',
     },
     
     effects: {
@@ -60,8 +60,8 @@ export default {
             });
         },
         *deleteRow({ payload }, { call, put }) {
-            const requestData = { type: 'DeleteReplenColour', data: payload };
-            const response = yield call(getDictListByParames, requestData);
+            const requestData = { type: 'EditReplenColour', data: payload };
+            const response = yield call(editDictByParames, requestData);
             //重新请求数据
             yield put({
                 type: 'fetch',

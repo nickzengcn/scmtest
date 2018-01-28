@@ -1,4 +1,4 @@
-import { Table, Input, Row, Col, Select, Form, Button, Modal, Tree } from 'antd';
+import { Table, Input, Row, Col, Select, Form, Button, Modal, Tree, Popconfirm, Divider } from 'antd';
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { handleFormReset, handleSearch } from '../Wave/DemandSearchFilter';
@@ -28,43 +28,52 @@ const EditableCell = ({ editable, value, onChange }) => (
 export default class DictColour extends PureComponent {
     constructor(props) {
         super(props);
-        this.columns = [{
-            title: '序号',
-            dataIndex: 'ID',
-            render: (text, record) => this.renderColumns(text, record, 'name'),
-        }, {
+        this.columns = [
+        //     {
+        //     title: '序号',
+        //     dataIndex: 'ID',
+        // }, 
+        {
             title: '风格',
             dataIndex: 'fgText',
-            render: (text, record) => this.renderColumns(text, record, 'age'),
         }, {
             title: '品类',
             dataIndex: 'plText',
-            render: (text, record) => this.renderColumns(text, record, 'address'),
         }, {
             title: '颜色',
             dataIndex: 'colourname',
-            render: (text, record) => this.renderColumns(text, record, 'address'),
         }, {
             title: '款基准数量',
-            dataIndex: 'address',
-            render: (text, record) => this.renderColumns(text, record, 'address'),
+            dataIndex: 'baseqty',
         }, {
             title: '操作',
             dataIndex: 'fgid',
             render: (text, record) => {
                 return (
                     <div className="editable-row-operations">
-                        {
-                            text ?
-                                <span>
-                                    <a onClick={() => this.save(record.key)}>删除</a>
-                                </span>
-                                : ''
-                        }
+                        <Popconfirm  title="你确定要删除么？" onConfirm={() => this.deleteRow(record.ID)} okText="是的" cancelText="不是">
+                            <a href="#">删除</a>
+                        </Popconfirm>
+                        <Divider type="vertical" />
+                        <a onClick={() => this.editRow(record)} >编辑</a>
                     </div>
                 );
             },
         }];
+    }
+    editRow = (item) => {
+        this.props.dispatch({
+            type: 'dictColour/edit',
+            payload: item,
+        })
+    }
+    deleteRow = (key) => {
+        this.props.dispatch({
+            type: 'dictColour/deleteRow',
+            payload: {
+                id:key
+            },
+        })
     }
     handleSearch = handleSearch.bind(this);
     handleFormReset = handleFormReset.bind(this);
@@ -72,6 +81,11 @@ export default class DictColour extends PureComponent {
         this.props.dispatch({
             type: 'dictColour/edit',
             payload: {},
+        })
+    }
+    componentDidMount(){
+        this.props.dispatch({
+            type: 'dictColour/fetch',
         })
     }
     renderSimpleForm() {
@@ -143,7 +157,7 @@ export default class DictColour extends PureComponent {
     }
 
     render() {
-        let { dictColour: { data: { list } } } = this.props;
+        let { dictColour: { data: { list } }, loading } = this.props;
         return (
             <Row>
                 <Col xs={24} className={styles.cols}>
@@ -160,7 +174,7 @@ export default class DictColour extends PureComponent {
                     </Col>
                 </Col>
                 <Col xs={24} className={styles.cols}>
-                    <Table bordered dataSource={list} columns={this.columns} />
+                    <Table loading={loading} bordered dataSource={list} columns={this.columns} />
                 </Col>
                 <DictColourForm />
             </Row>
@@ -207,17 +221,16 @@ class DictColourForm extends PureComponent {
         });
     }
     componentWillReceiveProps(nextprops) {
-        // const { fgText, plText, xlText } = nextprops.item.data;
-        // if (nextprops.item.data != this.props.item.data) {
-        //     // this.state.fgid = fgid;
-        //     // this.state.plid = plid;
-        //     // this.state.xlid = xlid;
-        //     this.setState({
-        //         xlbtn: xlText,
-        //         pl: plText,
-        //         fg: fgText,
-        //     });
-        // }
+        if (nextprops.item != this.props.item) {
+            const { fgText, plText } = nextprops.item;
+            // this.state.fgid = fgid;
+            // this.state.plid = plid;
+            // this.state.xlid = xlid;
+            this.setState({
+                xlbtn: fgText,
+                pl: plText,
+            });
+        }
     }
     handleTreeData = (datas) => {
         this.setState({
@@ -227,6 +240,12 @@ class DictColourForm extends PureComponent {
         const { setFieldsValue, getFieldValue } = this.props.form;
         setFieldsValue({ fgid: datas[1].categoryid });
         setFieldsValue({ plid: datas[2].categoryid });
+    }
+    colournameChange = ( datas ) => {
+        const { sysparames: { category, coloursum } } = this.props;
+        const color = coloursum.filter(item=>item.dtvalue==datas)
+        const { setFieldsValue, getFieldValue } = this.props.form;
+        setFieldsValue({ colourname: color[0].dtname });
     }
     render() {
         const { xlbtn, pl, fg, modal } = this.state;
@@ -253,6 +272,12 @@ class DictColourForm extends PureComponent {
             >
                 <Form hideRequiredMark>
                     <Form.Item style={{ display: 'none' }} label="品类id">
+                        {getFieldDecorator('ID', {
+                        })(
+                            <Input disabled placeholder="" />
+                            )}
+                    </Form.Item>
+                    <Form.Item style={{ display: 'none' }} label="品类id">
                         {getFieldDecorator('plid', {
                         })(
                             <Input disabled placeholder="" />
@@ -260,6 +285,12 @@ class DictColourForm extends PureComponent {
                     </Form.Item>
                     <Form.Item style={{ display: 'none' }} label="风格id">
                         {getFieldDecorator('fgid', {
+                        })(
+                            <Input disabled placeholder="" />
+                            )}
+                    </Form.Item>
+                    <Form.Item style={{ display: 'none' }} label="风格id">
+                        {getFieldDecorator('colourname', {
                         })(
                             <Input disabled placeholder="" />
                             )}
@@ -273,12 +304,13 @@ class DictColourForm extends PureComponent {
                         <Input disabled value={pl} placeholder="风格" />
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="颜色">
-                        {getFieldDecorator('id', {
+                        {getFieldDecorator('colourid', {
                             rules: [{ required: true, message: '请选择颜色' }],
                         })(
                             <Select
                                 optionFilterProp="children"
                                 placeholder="请选择"
+                                onChange={this.colournameChange}
                                 style={{
                                     width: '100%',
                                 }}
