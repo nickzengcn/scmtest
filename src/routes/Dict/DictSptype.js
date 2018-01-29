@@ -6,7 +6,7 @@ import { getTreeByLevel, returnTreeNodes, formItemLayout } from '../../utils/aju
 const FormItem = Form.Item;
 import styles from './Dict.less'
 import DemandClass from '../Wave/Demand.less'
-// import { TreeChosen } from '../Wave/DemandForm'
+import { TreeChosen } from './DictColour'
 const TreeNode = Tree.TreeNode;
 const { Option } = Select
 const EditableCell = ({ editable, value, onChange }) => (
@@ -18,14 +18,14 @@ const EditableCell = ({ editable, value, onChange }) => (
     </div>
 );
 
-@connect(({ dictColour, loading, sysparames }) => ({
-    dictColour,
+@connect(({ dictSptype, loading, sysparames }) => ({
+    dictSptype,
     sysparames,
-    defaultType:dictColour.defaultType,
-    loading: loading.models.dictColour,
+    defaultType:dictSptype.defaultType,
+    loading: loading.models.dictSptype,
 }))
 @Form.create()
-export default class DictColour extends PureComponent {
+export default class dictSptype extends PureComponent {
     constructor(props) {
         super(props);
         this.columns = [
@@ -40,8 +40,8 @@ export default class DictColour extends PureComponent {
             title: '品类',
             dataIndex: 'plText',
         }, {
-            title: '颜色',
-            dataIndex: 'colourname',
+            title: '商品类型',
+            dataIndex: 'sptypename',
         }, {
             title: '款基准数量',
             dataIndex: 'baseqty',
@@ -63,13 +63,13 @@ export default class DictColour extends PureComponent {
     }
     editRow = (item) => {
         this.props.dispatch({
-            type: 'dictColour/edit',
+            type: 'dictSptype/edit',
             payload: item,
         })
     }
     deleteRow = (key) => {
         this.props.dispatch({
-            type: 'dictColour/deleteRow',
+            type: 'dictSptype/deleteRow',
             payload: {
                 id:key
             },
@@ -79,13 +79,13 @@ export default class DictColour extends PureComponent {
     handleFormReset = handleFormReset.bind(this);
     handleAdd = () => {
         this.props.dispatch({
-            type: 'dictColour/edit',
+            type: 'dictSptype/edit',
             payload: {},
         })
     }
     componentDidMount(){
         this.props.dispatch({
-            type: 'dictColour/fetch',
+            type: 'dictSptype/fetch',
         })
     }
     renderSimpleForm() {
@@ -94,7 +94,7 @@ export default class DictColour extends PureComponent {
           sysparames: {
             band,
             category,
-            coloursum,
+            sptype,
           },
         } = this.props;
         const realCategory = getTreeByLevel(category, 3);
@@ -125,8 +125,8 @@ export default class DictColour extends PureComponent {
                         </FormItem>
                     </Col>
                     <Col md={8} sm={24}>
-                        <FormItem label="颜色" style={{ width: '100%' }}>
-                            {getFieldDecorator('colourid')(
+                        <FormItem label="商品类型" style={{ width: '100%' }}>
+                            {getFieldDecorator('sptype')(
                                 <Select
                                     optionFilterProp="children"
                                     placeholder="请选择"
@@ -134,7 +134,7 @@ export default class DictColour extends PureComponent {
                                         width: '100%',
                                     }}
                                 >
-                                    {coloursum.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
+                                    {sptype.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
                                 </Select>
                             )}
                         </FormItem>
@@ -157,7 +157,7 @@ export default class DictColour extends PureComponent {
     }
 
     render() {
-        let { dictColour: { data: { list } }, loading } = this.props;
+        let { dictSptype: { data: { list } }, loading } = this.props;
         return (
             <Row>
                 <Col xs={24} className={styles.cols}>
@@ -176,7 +176,7 @@ export default class DictColour extends PureComponent {
                 <Col xs={24} className={styles.cols}>
                     <Table loading={loading} bordered dataSource={list} columns={this.columns} />
                 </Col>
-                <DictColourForm />
+                <DictSptypeForm />
             </Row>
         )
     }
@@ -184,30 +184,30 @@ export default class DictColour extends PureComponent {
 
 
 
-@connect(({ dictColour, sysparames, loading }) => ({
-    item: dictColour.item.data,
-    modal: dictColour.item.modal,
+@connect(({ dictSptype, sysparames, loading }) => ({
+    item: dictSptype.item.data,
+    modal: dictSptype.item.modal,
     sysparames,
-    submitting: loading.effects['dictColour/editRow'],
+    submitting: loading.effects['dictSptype/editRow'],
 }))
 @Form.create({
     onFieldsChange(props, changedFields) {
     },
     mapPropsToFields(props) {
         let {
-            ID, fgid, plid, colourid, colourname, baseqty
+            ID, fgid, plid, sptypeid, sptypename, baseqty
         } = props.item;
         return {
             ID: Form.createFormField({ value: ID }),
             fgid: Form.createFormField({ value: fgid }),
             plid: Form.createFormField({ value: plid }),
-            colourid: Form.createFormField({ value: colourid }),
-            colourname: Form.createFormField({ value: colourname }),
+            sptypeid: Form.createFormField({ value: sptypeid }),
+            sptypename: Form.createFormField({ value: sptypename }),
             baseqty: Form.createFormField({ value: baseqty }),
         };
     },
 })
-class DictColourForm extends PureComponent {
+class DictSptypeForm extends PureComponent {
     state = {
 
     };
@@ -241,21 +241,21 @@ class DictColourForm extends PureComponent {
         setFieldsValue({ fgid: datas[1].categoryid });
         setFieldsValue({ plid: datas[2].categoryid });
     }
-    colournameChange = ( datas ) => {
-        const { sysparames: { category, coloursum } } = this.props;
-        const color = coloursum.filter(item=>item.dtvalue==datas)
+    sptypenameChange = ( datas ) => {
+        const { sysparames: { category, sptype } } = this.props;
+        const color = sptype.filter(item=>item.dtvalue==datas)
         const { setFieldsValue, getFieldValue } = this.props.form;
-        setFieldsValue({ colourname: color[0].dtname });
+        setFieldsValue({ sptypename: color[0].dtname });
     }
     render() {
         const { xlbtn, pl, fg, modal } = this.state;
-        const { form, dispatch, submitting, item: { data }, sysparames: { category, coloursum } } = this.props;
+        const { form, dispatch, submitting, item: { data }, sysparames: { category, sptype } } = this.props;
         const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
         const validate = () => {
             validateFieldsAndScroll((error, values) => {
                 if (!error) {
                     this.props.dispatch({
-                        type: 'dictColour/editRow',
+                        type: 'dictSptype/editRow',
                         payload: values,
                     });
                 }
@@ -268,7 +268,7 @@ class DictColourForm extends PureComponent {
                 footer={null}
                 visible={this.props.modal}
                 // onOk={this.props.dispatch({type:'closeEdit'})}
-                onCancel={() => this.props.dispatch({ type: 'dictColour/closeEdit' })}
+                onCancel={() => this.props.dispatch({ type: 'dictSptype/closeEdit' })}
             >
                 <Form hideRequiredMark>
                     <Form.Item style={{ display: 'none' }} label="品类id">
@@ -290,7 +290,7 @@ class DictColourForm extends PureComponent {
                             )}
                     </Form.Item>
                     <Form.Item style={{ display: 'none' }} label="风格id">
-                        {getFieldDecorator('colourname', {
+                        {getFieldDecorator('sptypename', {
                         })(
                             <Input disabled placeholder="" />
                             )}
@@ -303,19 +303,19 @@ class DictColourForm extends PureComponent {
                     <Form.Item {...formItemLayout} label="品类">
                         <Input disabled value={pl} placeholder="风格" />
                     </Form.Item>
-                    <Form.Item {...formItemLayout} label="颜色">
-                        {getFieldDecorator('colourid', {
-                            rules: [{ required: true, message: '请选择颜色' }],
+                    <Form.Item {...formItemLayout} label="商品类型">
+                        {getFieldDecorator('sptypeid', {
+                            rules: [{ required: true, message: '请选择商品类型' }],
                         })(
                             <Select
                                 optionFilterProp="children"
                                 placeholder="请选择"
-                                onChange={this.colournameChange}
+                                onChange={this.sptypenameChange}
                                 style={{
                                     width: '100%',
                                 }}
                             >
-                                {coloursum.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
+                                {sptype.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
                             </Select>
                             )}
                     </Form.Item>
@@ -338,84 +338,3 @@ class DictColourForm extends PureComponent {
     }
 }
 
-
-
-export class TreeChosen extends PureComponent {
-    state = {
-        expandedKeys: [],
-        autoExpandParent: true,
-        checkedKeys: [],
-        selectedKeys: [],
-    }
-    onExpand = (expandedKeys) => {
-        this.setState({
-            expandedKeys,
-            autoExpandParent: false,
-        });
-    }
-    onCheck = (checkedKeys, { checked, checkedNodes }) => {
-        this.setState({ checkedKeys });
-    }
-    onSelect = (selectedKeys, info) => {
-        this.setState({ selectedKeys });
-    }
-    getKeyGroup = (category, key, sub = 2, arr = []) => {
-        for (let index = 0; index < category.length; index++) {
-            const element = category[index];
-            const str = key.substr(0, sub);
-            if (element.categoryid == str) {
-                arr.push(element);
-                sub += 2;
-                return this.getKeyGroup(element.children, key, sub, arr);
-            }
-        }
-    }
-    handelSubmit = () => {
-        const { selectedKeys } = this.state;
-        if (selectedKeys.length == 0) {
-            message.warning('你需要选择一个四级类别。');
-        } else {
-            const key = selectedKeys[0];
-            const { category } = this.props;
-            const arr = [];
-            this.getKeyGroup(category, key, 2, arr);
-            this.props.handleTreeData(arr);
-            this.props.handelCancel();
-        }
-    }
-    returnTreeNodes = returnTreeNodes.bind(this);
-
-    render() {
-        return (
-            <Modal
-                title="选择2级小类"
-                footer={null}
-                visible={this.props.modal}
-                onCancel={() => this.props.handelCancel()}
-            >
-                <Row>
-                    <Col xl={24} >
-                        <Tree
-                            className={styles.scmTree}
-                            checkStrictly
-                            onExpand={this.onExpand}
-                            expandedKeys={this.state.expandedKeys}
-                            autoExpandParent={this.state.autoExpandParent}
-                            onCheck={this.onCheck}
-                            checkedKeys={this.state.checkedKeys}
-                            onSelect={this.onSelect}
-                            selectedKeys={this.state.selectedKeys}
-                        >
-                            {this.returnTreeNodes(this.props.category, 4)}
-                        </Tree>
-                    </Col>
-                    <Col className="xw-tx-center" xl={24} >
-                        <Button type="primary" onClick={this.handelSubmit} >
-                            确定
-                        </Button>
-                    </Col>
-                </Row>
-            </Modal>
-        );
-    }
-}

@@ -153,7 +153,6 @@ export async function paramesGetVender() {
     });
 }
 
-
 /**
  * 根据参数返回baseList
  */
@@ -164,7 +163,14 @@ export async function paramesGetBaseInfo(parames) {
     });
 }
 
-
+/**
+ * 获取尺码
+ */
+export async function getDictSize() {
+    return request('scm/Dict/GetSize', {
+        method: 'GET',
+    });
+}
 
 /**
  * 获取波段需求列表

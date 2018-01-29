@@ -1,4 +1,4 @@
-import { paramesGetBand, paramesGetBandYear, paramesGetCategory, 
+import { paramesGetBand, paramesGetBandYear, paramesGetCategory, getDictSize, 
     paramesGetShop, paramesGetScoreItem, paramesGetVender, paramesGetBaseInfo } from '../services/api';
 // import { setAuthority } from '../utils/authority';
 // import { routerRedux } from 'dva/router';
@@ -16,6 +16,8 @@ export default {
         coloursum: [],
         sptype: [],
         season: [],
+        size:[],
+        clothse:[],
         // currentAuthority: 'guest'
     },
 
@@ -56,6 +58,14 @@ export default {
             const response = yield call(paramesGetBaseInfo,{ type: 'season'});
             yield put({ type: 'updateSeason', payload: response });
         },
+        *getClothse(_, { call, put }) {
+            const response = yield call(paramesGetBaseInfo,{ type: 'clothse'});
+            yield put({ type: 'updateClothse', payload: response });
+        },
+        *getSize(_, { call, put }) {
+            const response = yield call(getDictSize);
+            yield put({ type: 'updateSize', payload: response });
+        },
         *getAllParames(_, { call, put }) {
             const band = yield call(paramesGetBand);
             const bandYear = yield call(paramesGetBandYear);
@@ -64,10 +74,12 @@ export default {
             const season = yield call(paramesGetBaseInfo,{ type: 'season'});
             const sptype = yield call(paramesGetBaseInfo,{ type: 'sptype'});
             const coloursum = yield call(paramesGetBaseInfo,{ type: 'coloursum'});
+            const clothse = yield call(paramesGetBaseInfo,{ type: 'clothse'});
+            const size = yield call(getDictSize);
             // const scoreItem = yield call(paramesGetScoreItem);
             // const vender = yield call(paramesGetVender);
             // yield put({ type: 'updateAllParames', payload: {band, bandYear, category, shop, scoreItem, vender} });
-            yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum } });
+            yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum, size, clothse } });
         },
     },
 
@@ -127,7 +139,18 @@ export default {
                 season: payload,
             };
         },
-
+        updateClothse(state, { payload }) {
+            return {
+                ...state,
+                clothse: payload,
+            };
+        },
+        updateSize(state, { payload }) {
+            return {
+                ...state,
+                size: payload,
+            };
+        },
         updateAllParames(state, { payload }) {
             return {
                 ...state,

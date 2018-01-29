@@ -126,7 +126,7 @@ export const getRouterData = (app) => {
         },
         //字典
         '/wwrewsss/ssffaawer': {
-            component: dynamicWrapper(app, ['dictColour'], () => import('../routes/Dict/DictIndex')),
+            component: dynamicWrapper(app, ['sysparames','dictColour','dictSptype','dictSeason'], () => import('../routes/Dict/DictIndex')),
         },
         // '/daysgoods/wave-plan-manager': {
         //   component: dynamicWrapper(app, ['rule'], () => import('../routes/DaysGoods/WavePlanManager')),

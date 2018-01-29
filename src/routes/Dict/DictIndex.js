@@ -6,6 +6,8 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, renderAdvancedForm, renderForm } from '../Wave/DemandSearchFilter';
 const { TabPane } = Tabs;
 import DictColour from './DictColour'
+import DictSptype from './DictSptype'
+import DitSeason from './DitSeason'
 
 import styles from './Dict.less';
 
@@ -22,8 +24,10 @@ export default class DictIndex extends PureComponent {
                                 <DictColour />
                             </TabPane>
                             <TabPane tab="商品类型表" key="2">
+                                <DictSptype />
                             </TabPane>
                             <TabPane tab="季节表" key="3">
+                                <DitSeason />
                             </TabPane>
                             <TabPane tab="尺码占比表" key="4">
                             </TabPane>

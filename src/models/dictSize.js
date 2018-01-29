@@ -1,6 +1,6 @@
 import { getDictListByParames, deleteDictById, editDictByParames } from '../services/api';
 
-const namespace = 'dictSeason';
+const namespace = 'dictSize';
 
 export default {
     namespace,
@@ -13,7 +13,7 @@ export default {
             data: {},
             modal: false,
         },
-        defaultType:'dictSeason/fetch',
+        defaultType:'dictSize/fetch',
     },
     
     effects: {
@@ -24,7 +24,7 @@ export default {
                     length: 9,
                 }
             }
-            const requestData = { type: 'QueryReplenSeasonList', data: payload }
+            const requestData = { type: 'QueryReplenSizeList', data: payload }
             const response = yield call(getDictListByParames, requestData);
             yield put({
                 type: 'save',
@@ -33,7 +33,7 @@ export default {
         },
 
         *editRow({ payload }, { call, put }) {
-            const type = payload.ID?'EditReplenSeason':'CreateReplenSeason';
+            const type = payload.ID?'EditReplenSize':'CreateReplenSize';
             //请求保存
             const requestData = { type, data: payload };
             const response = yield call(editDictByParames, requestData);
@@ -48,7 +48,7 @@ export default {
             });
         },
         *deleteRow({ payload }, { call, put }) {
-            const requestData = { type: 'DeleteReplenSeason', data: payload };
+            const requestData = { type: 'DeleteReplenSize', data: payload };
             const response = yield call(getDictListByParames, requestData);
             //重新请求数据
             yield put({
