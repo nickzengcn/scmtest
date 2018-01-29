@@ -8,6 +8,7 @@ const { TabPane } = Tabs;
 import DictColour from './DictColour'
 import DictSptype from './DictSptype'
 import DitSeason from './DitSeason'
+import DictSize from './DictSize'
 
 import styles from './Dict.less';
 
@@ -30,6 +31,7 @@ export default class DictIndex extends PureComponent {
                                 <DitSeason />
                             </TabPane>
                             <TabPane tab="尺码占比表" key="4">
+                                <DictSize />
                             </TabPane>
                             <TabPane tab="分店登记表" key="5">
                             </TabPane>
