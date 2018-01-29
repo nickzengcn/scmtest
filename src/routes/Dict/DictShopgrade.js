@@ -18,14 +18,14 @@ const EditableCell = ({ editable, value, onChange }) => (
     </div>
 );
 
-@connect(({ dictSize, loading, sysparames }) => ({
-    dictSize,
+@connect(({ dictShopgrade, loading, sysparames }) => ({
+    dictShopgrade,
     sysparames,
-    defaultType:dictSize.defaultType,
-    loading: loading.models.dictSize,
+    defaultType:dictShopgrade.defaultType,
+    loading: loading.models.dictShopgrade,
 }))
 @Form.create()
-export default class dictSize extends PureComponent {
+export default class DictShopgrade extends PureComponent {
     constructor(props) {
         super(props);
         this.columns = [
@@ -69,13 +69,13 @@ export default class dictSize extends PureComponent {
     }
     editRow = (item) => {
         this.props.dispatch({
-            type: 'dictSize/edit',
+            type: 'dictShopgrade/edit',
             payload: item,
         })
     }
     deleteRow = (key) => {
         this.props.dispatch({
-            type: 'dictSize/deleteRow',
+            type: 'dictShopgrade/deleteRow',
             payload: {
                 id:key
             },
@@ -85,13 +85,13 @@ export default class dictSize extends PureComponent {
     handleFormReset = handleFormReset.bind(this);
     handleAdd = () => {
         this.props.dispatch({
-            type: 'dictSize/edit',
+            type: 'dictShopgrade/edit',
             payload: {},
         })
     }
     componentDidMount(){
         this.props.dispatch({
-            type: 'dictSize/fetch',
+            type: 'dictShopgrade/fetch',
         })
     }
     toggleForm = ()=>{
@@ -198,7 +198,7 @@ export default class dictSize extends PureComponent {
     }
 
     render() {
-        let { dictSize: { data: { list } }, loading } = this.props;
+        let { dictShopgrade: { data: { list } }, loading } = this.props;
         return (
             <Row>
                 <Col xs={24} className={styles.cols}>
@@ -217,7 +217,7 @@ export default class dictSize extends PureComponent {
                 <Col xs={24} className={styles.cols}>
                     <Table loading={loading} bordered dataSource={list} columns={this.columns} />
                 </Col>
-                <DictSizeForm />
+                <DictShopgradeForm />
             </Row>
         )
     }
@@ -225,11 +225,11 @@ export default class dictSize extends PureComponent {
 
 
 
-@connect(({ dictSize, sysparames, loading }) => ({
-    item: dictSize.item.data,
-    modal: dictSize.item.modal,
+@connect(({ dictShopgrade, sysparames, loading }) => ({
+    item: dictShopgrade.item.data,
+    modal: dictShopgrade.item.modal,
     sysparames,
-    submitting: loading.effects['dictSize/editRow'],
+    submitting: loading.effects['dictShopgrade/editRow'],
 }))
 @Form.create({
     onFieldsChange(props, changedFields) {
@@ -250,7 +250,7 @@ export default class dictSize extends PureComponent {
         };
     },
 })
-class DictSizeForm extends PureComponent {
+class DictShopgradeForm extends PureComponent {
     state = {
 
     };
@@ -284,7 +284,7 @@ class DictSizeForm extends PureComponent {
         setFieldsValue({ fgid: datas[1].categoryid });
         setFieldsValue({ plid: datas[2].categoryid });
     }
-    SizenameChange = ( datas ) => {
+    ShopgradenameChange = ( datas ) => {
         const { sysparames: { category, size, clothse } } = this.props;
         const color = size.filter(item=>item.dsid==datas)
         const { setFieldsValue, getFieldValue } = this.props.form;
@@ -304,7 +304,7 @@ class DictSizeForm extends PureComponent {
             validateFieldsAndScroll((error, values) => {
                 if (!error) {
                     this.props.dispatch({
-                        type: 'dictSize/editRow',
+                        type: 'dictShopgrade/editRow',
                         payload: values,
                     });
                 }
@@ -317,7 +317,7 @@ class DictSizeForm extends PureComponent {
                 footer={null}
                 visible={this.props.modal}
                 // onOk={this.props.dispatch({type:'closeEdit'})}
-                onCancel={() => this.props.dispatch({ type: 'dictSize/closeEdit' })}
+                onCancel={() => this.props.dispatch({ type: 'dictShopgrade/closeEdit' })}
             >
                 <Form hideRequiredMark>
                     <Form.Item style={{ display: 'none' }} label="品类id">
@@ -375,7 +375,7 @@ class DictSizeForm extends PureComponent {
                             <Select
                                 optionFilterProp="children"
                                 placeholder="请选择"
-                                onChange={this.SizenameChange}
+                                onChange={this.ShopgradenameChange}
                                 style={{
                                     width: '100%',
                                 }}

@@ -18,6 +18,8 @@ export default {
         season: [],
         size:[],
         clothse:[],
+        shoplevel:[],
+        shoptype:[],
         // currentAuthority: 'guest'
     },
 
@@ -62,6 +64,14 @@ export default {
             const response = yield call(paramesGetBaseInfo,{ type: 'clothse'});
             yield put({ type: 'updateClothse', payload: response });
         },
+        *getShoplevel(_, { call, put }) {
+            const response = yield call(paramesGetBaseInfo,{ type: 'shoplevel'});
+            yield put({ type: 'updateShoplevel', payload: response });
+        },
+        *getShoptype(_, { call, put }) {
+            const response = yield call(paramesGetBaseInfo,{ type: 'shoptype'});
+            yield put({ type: 'updateShoptype', payload: response });
+        },
         *getSize(_, { call, put }) {
             const response = yield call(getDictSize);
             yield put({ type: 'updateSize', payload: response });
@@ -75,11 +85,13 @@ export default {
             const sptype = yield call(paramesGetBaseInfo,{ type: 'sptype'});
             const coloursum = yield call(paramesGetBaseInfo,{ type: 'coloursum'});
             const clothse = yield call(paramesGetBaseInfo,{ type: 'clothse'});
+            const shoptype = yield call(paramesGetBaseInfo,{ type: 'shoptype'});
+            const shoplevel = yield call(paramesGetBaseInfo,{ type: 'shoplevel'});
             const size = yield call(getDictSize);
             // const scoreItem = yield call(paramesGetScoreItem);
             // const vender = yield call(paramesGetVender);
             // yield put({ type: 'updateAllParames', payload: {band, bandYear, category, shop, scoreItem, vender} });
-            yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum, size, clothse } });
+            yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum, size, clothse, shoplevel, shoptype } });
         },
     },
 
@@ -143,6 +155,18 @@ export default {
             return {
                 ...state,
                 clothse: payload,
+            };
+        },
+        updateShoplevel(state, { payload }) {
+            return {
+                ...state,
+                shoplevel: payload,
+            };
+        },
+        updateShoptype(state, { payload }) {
+            return {
+                ...state,
+                shoptype: payload,
             };
         },
         updateSize(state, { payload }) {
