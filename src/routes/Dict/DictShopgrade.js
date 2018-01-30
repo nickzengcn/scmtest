@@ -1,4 +1,4 @@
-import { Table, Input, Row, Col, Select, Form, Button, Modal, Tree, Popconfirm, Divider, Icon } from 'antd';
+import { Table, Input, Row, Col, Select, Form, Button, Modal, Tree, Popconfirm, Divider, Icon, Checkbox } from 'antd';
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { handleFormReset, handleSearch } from '../Wave/DemandSearchFilter';
@@ -29,28 +29,32 @@ export default class DictShopgrade extends PureComponent {
     constructor(props) {
         super(props);
         this.columns = [
-        //     {
-        //     title: '序号',
-        //     dataIndex: 'ID',
-        // }, 
         {
-            title: '风格',
-            dataIndex: 'fgText',
+            title: '门店编码',
+            dataIndex: 'shopid',
+        },
+        {
+            title: '门店名称',
+            dataIndex: 'shopname',
+        }, 
+        {
+            title: '一级分类',
+            dataIndex: 'dlText',
         }, {
-            title: '品类',
-            dataIndex: 'plText',
+            title: '级别',
+            dataIndex: 'gradename',
         }, {
-            title: '版型',
-            dataIndex: 'layoutName',
+            title: '系数',
+            dataIndex: 'rate',
         }, {
-            title: '尺码',
-            dataIndex: 'sizeName',
+            title: '试销标识',
+            dataIndex: 'tryflag',
         }, {
-            title: '占比',
-            dataIndex: 'percent',
+            title: '门店类型',
+            dataIndex: 'shoptype',
         }, {
             title: '操作',
-            dataIndex: 'fgid',
+            dataIndex: 'ID',
             render: (text, record) => {
                 return (
                     <div className="editable-row-operations">
@@ -107,11 +111,11 @@ export default class DictShopgrade extends PureComponent {
           sysparames: {
             band,
             category,
-            size,
+            shop,
             clothse,
           },
         } = this.props;
-        const realCategory = getTreeByLevel(category, 3);
+        const realCategory = getTreeByLevel(category, 1);
 
         return (
             <Form onSubmit={this.handleSearch} layout="inline">
@@ -123,8 +127,8 @@ export default class DictShopgrade extends PureComponent {
                     }}
                 >
                     <Col md={8} sm={24}>
-                        <FormItem label="品类" style={{ width: '100%' }}>
-                            {getFieldDecorator('pl')(
+                        <FormItem label="大类" style={{ width: '100%' }}>
+                            {getFieldDecorator('dlid')(
                                 <Select
                                     optionFilterProp="children"
                                     mode="multiple"
@@ -139,8 +143,8 @@ export default class DictShopgrade extends PureComponent {
                         </FormItem>
                     </Col>
                     <Col md={8} sm={24}>
-                        <FormItem label="版型" style={{ width: '100%' }}>
-                            {getFieldDecorator('layoutid')(
+                        <FormItem label="门店号" style={{ width: '100%' }}>
+                            {getFieldDecorator('shopid')(
                                 <Select
                                     optionFilterProp="children"
                                     placeholder="请选择"
@@ -148,12 +152,12 @@ export default class DictShopgrade extends PureComponent {
                                         width: '100%',
                                     }}
                                 >
-                                    {clothse.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
+                                    {shop.map(item => <Option key={item.sampleId} value={item.sampleId}>{item.shopName}</Option>)}
                                 </Select>
                             )}
                         </FormItem>
                     </Col>
-                    {moreFilter?
+                    {/* {moreFilter?
                         <Col md={8} sm={24}>
                             <FormItem label="尺码" style={{ width: '100%' }}>
                                 {getFieldDecorator('sizeid')(
@@ -170,7 +174,7 @@ export default class DictShopgrade extends PureComponent {
                             </FormItem>
                         </Col>:
                         null
-                    }
+                    } */}
                     <Col md={8} sm={24}>
                         <span>
                             <Button type="primary" htmlType="submit">查询</Button>
@@ -181,7 +185,7 @@ export default class DictShopgrade extends PureComponent {
                                 onClick={this.handleFormReset}
                                 >重置
                             </Button>
-                            <a
+                            {/* <a
                             style={{
                                             marginLeft: 8,
                                         }}
@@ -189,7 +193,7 @@ export default class DictShopgrade extends PureComponent {
                             >
                                             {moreFilter?"收回":"展开"}
                             <Icon type={moreFilter?"up":"down"} />
-                            </a>
+                            </a> */}
                         </span>
                     </Col>
                 </Row>
@@ -236,17 +240,17 @@ export default class DictShopgrade extends PureComponent {
     },
     mapPropsToFields(props) {
         let {
-            ID, fgid, plid, sizeid, sizename, layoutid, clothsename, percent
+            ID, dlid, shopname, gradename, rate, tryflag, shoptype, gradeid
         } = props.item;
         return {
             ID: Form.createFormField({ value: ID }),
-            fgid: Form.createFormField({ value: fgid }),
-            plid: Form.createFormField({ value: plid }),
-            sizeid: Form.createFormField({ value: sizeid }),
-            sizename: Form.createFormField({ value: sizename }),
-            layoutid: Form.createFormField({ value: layoutid }),
-            clothsename: Form.createFormField({ value: clothsename }),
-            percent: Form.createFormField({ value: percent }),
+            dlid: Form.createFormField({ value: dlid }),
+            shopname: Form.createFormField({ value: shopname }),
+            gradename: Form.createFormField({ value: gradename }),
+            rate: Form.createFormField({ value: rate }),
+            tryflag: Form.createFormField({ value: tryflag }),
+            shoptype: Form.createFormField({ value: shoptype }),
+            gradeid: Form.createFormField({ value: gradeid }),
         };
     },
 })
@@ -264,42 +268,29 @@ class DictShopgradeForm extends PureComponent {
         });
     }
     componentWillReceiveProps(nextprops) {
-        if (nextprops.item != this.props.item) {
-            const { fgText, plText } = nextprops.item;
-            // this.state.fgid = fgid;
-            // this.state.plid = plid;
-            // this.state.xlid = xlid;
-            this.setState({
-                xlbtn: fgText,
-                pl: plText,
-            });
-        }
+        // if (nextprops.item != this.props.item) {
+        //     const { fgText, plText } = nextprops.item;
+        //     // this.state.fgid = fgid;
+        //     // this.state.plid = plid;
+        //     // this.state.xlid = xlid;
+        //     this.setState({
+        //         xlbtn: fgText,
+        //         pl: plText,
+        //     });
+        // }
     }
-    handleTreeData = (datas) => {
-        this.setState({
-            xlbtn: datas[2].categoryname,
-            pl: datas[1].categoryname,
-        });
+    shopChange = ( datas ) => {
+        const { sysparames: { shop } } = this.props;
+        const color = shop.filter(item=>item.sampleId==datas)
         const { setFieldsValue, getFieldValue } = this.props.form;
-        setFieldsValue({ fgid: datas[1].categoryid });
-        setFieldsValue({ plid: datas[2].categoryid });
-    }
-    ShopgradenameChange = ( datas ) => {
-        const { sysparames: { category, size, clothse } } = this.props;
-        const color = size.filter(item=>item.dsid==datas)
-        const { setFieldsValue, getFieldValue } = this.props.form;
-        setFieldsValue({ sizename: color[0].dsname });
-    }
-    clothsenameChange = ( datas ) => {
-        const { sysparames: { category, size, clothse } } = this.props;
-        const color = clothse.filter(item=>item.dtvalue==datas)
-        const { setFieldsValue, getFieldValue } = this.props.form;
-        setFieldsValue({ clothsename: color[0].dtname });
+        setFieldsValue({ shopname: color[0].shopName });
     }
     render() {
         const { xlbtn, pl, fg, modal } = this.state;
-        const { form, dispatch, submitting, item: { data }, sysparames: { category, size, clothse } } = this.props;
+        const { form, dispatch, submitting, item: { data }, sysparames: { category, shop, shoptype, shoplevel  } } = this.props;
         const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
+        const realCategory = getTreeByLevel(category, 1);
+
         const validate = () => {
             validateFieldsAndScroll((error, values) => {
                 if (!error) {
@@ -312,7 +303,7 @@ class DictShopgradeForm extends PureComponent {
         };
         return (
             <Modal
-                title="编辑颜色参数数据"
+                title="编辑门店参数数据"
                 width={768}
                 footer={null}
                 visible={this.props.modal}
@@ -326,50 +317,59 @@ class DictShopgradeForm extends PureComponent {
                             <Input disabled placeholder="" />
                             )}
                     </Form.Item>
-                    <Form.Item style={{ display: 'none' }} label="品类id">
-                        {getFieldDecorator('plid', {
-                        })(
-                            <Input disabled placeholder="" />
-                            )}
-                    </Form.Item>
                     <Form.Item style={{ display: 'none' }} label="风格id">
                         {getFieldDecorator('fgid', {
                         })(
                             <Input disabled placeholder="" />
                             )}
                     </Form.Item>
-                    <Form.Item style={{ display: 'none' }} label="风格id">
-                        {getFieldDecorator('sizename', {
-                        })(
-                            <Input disabled placeholder="" />
+                    <Form.Item label="门店" {...formItemLayout} style={{ width: '100%' }}>
+                            {getFieldDecorator('shopid')(
+                                <Select
+                                    optionFilterProp="children"
+                                    placeholder="请选择"
+                                    onChange = {this.shopChange}
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                >
+                                    {shop.map(item => <Option key={item.sampleId} value={item.sampleId}>{item.shopName}</Option>)}
+                                </Select>
                             )}
                     </Form.Item>
-                    <Form.Item {...formItemLayout} label="风格">
-                        <Button style={{ width: '100%', textAlign: 'left' }} type="nomal" onClick={this.handleTree}>
-                            {!xlbtn ? '请点击选择树节点' : xlbtn}
-                        </Button>
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="品类">
-                        <Input disabled value={pl} placeholder="风格" />
-                    </Form.Item>
-                    <Form.Item {...formItemLayout} label="版型">
-                        {getFieldDecorator('layoutid', {
-                            rules: [{ required: true, message: '请选择版型' }],
+                    <Form.Item {...formItemLayout} label="大类">
+                        {getFieldDecorator('dlid', {
+                            rules: [{ required: true, message: '请选择大类' }],
                         })(
                             <Select
                                 optionFilterProp="children"
                                 placeholder="请选择"
-                                onChange={this.clothsenameChange}
                                 style={{
                                     width: '100%',
                                 }}
                             >
-                                {clothse.map(item =>  <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
+                                {realCategory.map(item => <Option key={item.categoryid} value={item.categoryid}>{item.categoryname}</Option>)}
+                                </Select>
+                            )}
+                    </Form.Item>
+                    <Form.Item {...formItemLayout} label="级别">
+                        {getFieldDecorator('gradeid', {
+                            rules: [{ required: true, message: '请选择级别' }],
+                        })(
+                            <Select
+                                optionFilterProp="children"
+                                placeholder="请选择"
+                                // onChange={this.clothsenameChange}
+                                style={{
+                                    width: '100%',
+                                }}
+                            >
+                                {shoplevel.map(item =>  <Option key={item.ID} value={item.dtvalue}>{item.dtname}</Option>)}
                             </Select>
                             )}
                     </Form.Item>
-                    <Form.Item {...formItemLayout} label="尺码">
-                        {getFieldDecorator('sizeid', {
+                    <Form.Item {...formItemLayout} label="门店类型">
+                        {getFieldDecorator('shoptype', {
                             rules: [{ required: true, message: '请选择尺码' }],
                         })(
                             <Select
@@ -380,15 +380,22 @@ class DictShopgradeForm extends PureComponent {
                                     width: '100%',
                                 }}
                             >
-                                {size.map(item => <Option key={item.id} value={item.dsid}>{item.dsname}</Option>)}
+                                {shoptype.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dsname}</Option>)}
                             </Select>
                             )}
                     </Form.Item>
-                    <Form.Item {...formItemLayout} label="占比">
-                        {getFieldDecorator('percent', {
-                            rules: [{ required: true, message: '请正确输入占比' }],
+                    <Form.Item {...formItemLayout} label="试销标识">
+                        {getFieldDecorator('tryflag', {
+                            rules: [{ required: true, message: '请选择尺码' }],
                         })(
-                            <Input type="number" placeholder="请输入占比'" />
+                            <Checkbox >是否试销</Checkbox>
+                            )}
+                    </Form.Item>
+                    <Form.Item {...formItemLayout} label="系数">
+                        {getFieldDecorator('rate', {
+                            rules: [{ required: true, message: '请正确输入系数' }],
+                        })(
+                            <Input type="number" placeholder="请输入系数'" />
                             )}
                     </Form.Item>
                     <Row className="xw-tx-center">
@@ -396,7 +403,6 @@ class DictShopgradeForm extends PureComponent {
                             保存
                         </Button>
                     </Row>
-                    <TreeChosen category={category} modal={this.state.modal} handleTreeData={this.handleTreeData} handelCancel={this.handleTree} />
                 </Form>
             </Modal>
         );
