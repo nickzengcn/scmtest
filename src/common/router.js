@@ -128,6 +128,10 @@ export const getRouterData = (app) => {
         '/wwrewsss/ssffaawer': {
             component: dynamicWrapper(app, ['sysparames','dictColour','dictSptype','dictSeason','dictSize','dictShopgrade'], () => import('../routes/Dict/DictIndex')),
         },
+        //样衣二审
+        '/judgetwo/sdfsdferwer': {
+            component: dynamicWrapper(app, ['secondJudge','user'], () => import('../routes/SampleSecond/Judge')),
+        }
         // '/daysgoods/wave-plan-manager': {
         //   component: dynamicWrapper(app, ['rule'], () => import('../routes/DaysGoods/WavePlanManager')),
         // },

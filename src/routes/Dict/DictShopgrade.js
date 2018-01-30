@@ -1,4 +1,4 @@
-import { Table, Input, Row, Col, Select, Form, Button, Modal, Tree, Popconfirm, Divider, Icon, Checkbox } from 'antd';
+import { Table, Input, Row, Col, Select, Form, Button, Modal, Tree, Popconfirm, Divider, Icon, Radio } from 'antd';
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { handleFormReset, handleSearch } from '../Wave/DemandSearchFilter';
@@ -9,6 +9,8 @@ import DemandClass from '../Wave/Demand.less'
 import { TreeChosen } from './DictColour'
 const TreeNode = Tree.TreeNode;
 const { Option } = Select
+const RadioGroup = Radio.Group;
+
 const EditableCell = ({ editable, value, onChange }) => (
     <div>
         {editable
@@ -152,7 +154,7 @@ export default class DictShopgrade extends PureComponent {
                                         width: '100%',
                                     }}
                                 >
-                                    {shop.map(item => <Option key={item.sampleId} value={item.sampleId}>{item.shopName}</Option>)}
+                                    {shop.map(item => <Option key={item.shopID} value={item.shopID}>{item.shopName}</Option>)}
                                 </Select>
                             )}
                         </FormItem>
@@ -281,9 +283,15 @@ class DictShopgradeForm extends PureComponent {
     }
     shopChange = ( datas ) => {
         const { sysparames: { shop } } = this.props;
-        const color = shop.filter(item=>item.sampleId==datas)
+        const color = shop.filter(item=>item.shopID==datas)
         const { setFieldsValue, getFieldValue } = this.props.form;
         setFieldsValue({ shopname: color[0].shopName });
+    }
+    gradeChange = ( datas ) => {
+        const { sysparames: { shoplevel } } = this.props;
+        const color = shoplevel.filter(item=>item.dtvalue==datas)
+        const { setFieldsValue, getFieldValue } = this.props.form;
+        setFieldsValue({ gradename: color[0].dtname });
     }
     render() {
         const { xlbtn, pl, fg, modal } = this.state;
@@ -318,7 +326,19 @@ class DictShopgradeForm extends PureComponent {
                             )}
                     </Form.Item>
                     <Form.Item style={{ display: 'none' }} label="风格id">
-                        {getFieldDecorator('fgid', {
+                        {getFieldDecorator('dlid', {
+                        })(
+                            <Input disabled placeholder="" />
+                            )}
+                    </Form.Item>
+                    <Form.Item style={{ display: 'none' }} label="风格id">
+                        {getFieldDecorator('gradename', {
+                        })(
+                            <Input disabled placeholder="" />
+                            )}
+                    </Form.Item>
+                    <Form.Item style={{ display: 'none' }} label="风格id">
+                        {getFieldDecorator('shopname', {
                         })(
                             <Input disabled placeholder="" />
                             )}
@@ -333,7 +353,7 @@ class DictShopgradeForm extends PureComponent {
                                         width: '100%',
                                     }}
                                 >
-                                    {shop.map(item => <Option key={item.sampleId} value={item.sampleId}>{item.shopName}</Option>)}
+                                    {shop.map(item => <Option key={item.shopID} value={item.shopID}>{item.shopName}</Option>)}
                                 </Select>
                             )}
                     </Form.Item>
@@ -359,7 +379,7 @@ class DictShopgradeForm extends PureComponent {
                             <Select
                                 optionFilterProp="children"
                                 placeholder="请选择"
-                                // onChange={this.clothsenameChange}
+                                onChange={this.gradeChange}
                                 style={{
                                     width: '100%',
                                 }}
@@ -380,15 +400,19 @@ class DictShopgradeForm extends PureComponent {
                                     width: '100%',
                                 }}
                             >
-                                {shoptype.map(item => <Option key={item.ID} value={item.dtvalue}>{item.dsname}</Option>)}
+                                {shoptype.map(item => <Option key={item.dtvalue} value={item.dtvalue}>{item.dtname}</Option>)}
                             </Select>
                             )}
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="试销标识">
                         {getFieldDecorator('tryflag', {
+                            initialValue:1,
                             rules: [{ required: true, message: '请选择尺码' }],
                         })(
-                            <Checkbox >是否试销</Checkbox>
+                            <RadioGroup>
+                                <Radio value={1}>是</Radio>
+                                <Radio value={0}>否</Radio>
+                            </RadioGroup>
                             )}
                     </Form.Item>
                     <Form.Item {...formItemLayout} label="系数">

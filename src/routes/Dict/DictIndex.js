@@ -9,6 +9,7 @@ import DictColour from './DictColour'
 import DictSptype from './DictSptype'
 import DitSeason from './DitSeason'
 import DictSize from './DictSize'
+import DictShopgrade from './DictShopgrade'
 
 import styles from './Dict.less';
 
@@ -34,6 +35,7 @@ export default class DictIndex extends PureComponent {
                                 <DictSize />
                             </TabPane>
                             <TabPane tab="分店登记表" key="5">
+                                <DictShopgrade />
                             </TabPane>
                         </Tabs>
                     </Row>
