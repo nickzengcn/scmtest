@@ -11,6 +11,7 @@
       ]
     }
   },
+  "devtool" : "cheap-module-eval-source-map",
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
   "html": {

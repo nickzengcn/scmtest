@@ -11,9 +11,8 @@ export default {
       pagination: {},
     },
     defaultType: `${namespace}/fetch`,
-    Edit: { modal: false, data: {} },
-    Query: { modal: false, data: {} },
-    Audit: { modal: false, data: {} },
+    modal: false,
+    item: {},
   },
 
   effects: {
@@ -34,7 +33,20 @@ export default {
 
   
   reducers: {
-    
+    setItem(state, action) {
+        return {
+          ...state,
+          item: action.payload,
+          modal: true
+        };
+      },
+    closeItem(state, action) {
+        return {
+          ...state,
+          item: {},
+          modal: false
+        };
+      },
     save(state, action) {
       return {
         ...state,
