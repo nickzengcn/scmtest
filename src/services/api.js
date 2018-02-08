@@ -74,8 +74,11 @@ export async function fakeRegister(params) {
     });
 }
 
-export async function queryNotices() {
-    return request('/api/notices');
+export async function queryNotices(parames) {
+    const str = getQueryStr(parames);
+    return request(`scm/Home/QueryMessageList${str}`, {
+        method: 'GET',
+    });
 }
 
 
