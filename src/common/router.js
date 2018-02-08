@@ -121,6 +121,15 @@ export const getRouterData = (app) => {
         '/judgeone/erwerwe': {
             component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/Sample/Erwerwe')),
         },
+        //样衣一审决策(待处理)
+        '/judgeone/werewrsscdd': {
+            component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/SampleOne/Judge')),
+        },
+        //样衣二审提交(待处理)
+        '/judgetwo/erwerewr': {
+            component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/SampleSecond/Submit')),
+        },
+        //成本分解
         '/sample/spend-analysis': {
             component: dynamicWrapper(app, ['sampleApply','sysparames'], () => import('../routes/Sample/spendanalysis/SpendAnalysis')),
         },

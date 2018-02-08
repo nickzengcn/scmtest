@@ -1,7 +1,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Card, Form, Modal, Row, Col } from 'antd';
+import { Card, Form, Modal, Row, Col, Input } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, renderAdvancedForm, renderForm } from '../Wave/DemandSearchFilter';
 import InfiniteScroller from './InfiniteScroller';
@@ -77,10 +77,15 @@ class JudgeForm extends PureComponent {
                 onCancel={() => this.props.dispatch({type:'secondJudge/closeItem'})}
             >
                 <DescriptionList size="large" title="基础数据" style={{ marginBottom: 32 }}>
-                    <Col xs={24} sm={12} md={10}>
-                        <LazyLoadImg style={{width:'100%'}}/>
+                    <Col xs={24} sm={12} md={8}>
+                        <Col className={styles.textline} xs={6}>
+                            样衣图片：
+                        </Col>
+                        <Col className={styles.textline} xs={18}>
+                            <LazyLoadImg style={{width:'100%',paddingTop:5}}/>
+                        </Col>
                     </Col>
-                    <Col className={styles.textblock} xs={24} sm={12} md={14}>
+                    <Col className={styles.textblock} xs={24} sm={12} md={16}>
                         <Col className={styles.textline} xs={12}>
                             ID号：256
                         </Col>
@@ -113,7 +118,122 @@ class JudgeForm extends PureComponent {
                         </Col>
                     </Col>
                 </DescriptionList>
+                <DescriptionList size="large" title="库存数量管控分析（富基取数）" style={{ marginBottom: 32 }}>
+                    <Description term="系统ID">{'id'}</Description>
+                    <Description term="年份">{'Year'}</Description>
+                    <Description term="波段号">{'bandid'}</Description>
+                    <Description term="波段名称">{'bandname'}</Description>
+                    <Description term="风格">{'fgText'}</Description>
+                    <Description term="品类">{'plText'}</Description>
+                    <Description term="小类">{'xlText'}</Description>
+                    <Description term="系统ID">{'id'}</Description>
+                    <Description term="年份">{'Year'}</Description>
+                    <Description term="波段号">{'bandid'}</Description>
+                    <Description term="波段名称">{'bandname'}</Description>
+                    <Description term="风格">{'fgText'}</Description>
+                    <Description term="品类">{'plText'}</Description>
+                    <Description term="小类">{'xlText'}</Description>
+                    <Description term="系统ID">{'id'}</Description>
+                    <Description term="年份">{'Year'}</Description>
+                    <Description term="波段号">{'bandid'}</Description>
+                    <Description term="波段名称">{'bandname'}</Description>
+                    <Description term="风格">{'fgText'}</Description>
+                    <Description term="品类">{'plText'}</Description>
+                </DescriptionList>
+                <DescriptionList size="large" title="评分项" style={{ marginBottom: 32 }}>
+                    <DetailForm />
+                </DescriptionList>
             </Modal>
+        )
+    }
+}
+
+@Form.create()
+class DetailForm extends PureComponent {
+    render(){
+        const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = this.props.form;
+        return (
+            <Form layout="vertical" hideRequiredMark>
+                <Row gutter={16}>
+                    <Col xs={24} style={{marginBottom:12}}>
+                        <Col className={styles.textline} xs={12}>
+                            风格：时尚休闲
+                        </Col>
+                        <Col className={styles.textline} xs={12}>
+                            大类：时尚休闲风格
+                        </Col>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item  label="系列">
+                            {getFieldDecorator('plid', {
+                            })(
+                                <Input disabled placeholder="" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="版型">
+                            {getFieldDecorator('fgid', {
+                            })(
+                                <Input disabled placeholder="" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="波段款数匹配度">
+                            {getFieldDecorator('xlid', {
+                            })(
+                                <Input disabled placeholder="" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="商品类型">
+                            {getFieldDecorator('id', {
+                                rules: [{}],
+                            })(
+                                <Input disabled placeholder="波段号系统自动生成" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="波段款式需求匹配度">
+                            {getFieldDecorator('id', {
+                                rules: [{}],
+                            })(
+                                <Input disabled placeholder="波段号系统自动生成" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="可选色">
+                            {getFieldDecorator('id', {
+                                rules: [{}],
+                            })(
+                                <Input disabled placeholder="波段号系统自动生成" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="尺码">
+                            {getFieldDecorator('id', {
+                                rules: [{}],
+                            })(
+                                <Input disabled placeholder="波段号系统自动生成" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                    <Col lg={6} md={12} sm={24}>
+                        <Form.Item label="确定色">
+                            {getFieldDecorator('id', {
+                                rules: [{}],
+                            })(
+                                <Input disabled placeholder="波段号系统自动生成" />
+                                )}
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
         )
     }
 }
