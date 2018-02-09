@@ -135,6 +135,7 @@ class BasicLayout extends React.PureComponent {
             currentUser={currentUser}
             fetchingNotices={fetchingNotices}
             notices={notices}
+            dispatch = {this.props.dispatch}
             collapsed={collapsed}
             isMobile={this.state.isMobile}
             onNoticeClear={this.handleNoticeClear}

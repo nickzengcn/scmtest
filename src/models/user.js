@@ -82,6 +82,9 @@ export default {
           type: 'sysparames/getAllParames',
         });
         yield put({
+          type: 'global/fetchNotices',
+        });
+        yield put({
           type: 'updateUserMenu',
           payload: response,
         });

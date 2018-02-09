@@ -6,18 +6,29 @@ export default {
   state: {
     collapsed: false,
     notices: [],
+    message: {
+      modal: false,
+      item: {}
+    },
   },
 
   effects: {
-    *fetchNotices(_, { call, put }) {
-      const data = yield call(queryNotices);
+    *fetchNotices({ payload }, { call, put }) {
+      if(!payload){
+        payload =  {
+            start: 0,
+            length: 9,
+        }
+    }
+      const data = yield call(queryNotices, payload);
+      const { list } = data;
       yield put({
         type: 'saveNotices',
-        payload: data,
+        payload: list,
       });
       yield put({
         type: 'user/changeNotifyCount',
-        payload: data.length,
+        payload: list.length,
       });
     },
     *clearNotices({ payload }, { put, select }) {
@@ -34,6 +45,24 @@ export default {
   },
 
   reducers: {
+    openMessage(state, { payload }) {
+      return {
+        ...state,
+        message: {
+          modal:true,
+          item:payload
+        },
+      };
+    },
+    closeMessage(state, { payload }) {
+      return {
+        ...state,
+        message: {
+          modal:false,
+          item:{}
+        },
+      };
+    },
     changeLayoutCollapsed(state, { payload }) {
       return {
         ...state,

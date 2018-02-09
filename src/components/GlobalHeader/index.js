@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Layout, Menu, Icon, Spin, Tag, Dropdown, Avatar, Divider } from 'antd';
+import { connect } from 'dva';
+import { Layout, Menu, Icon, Spin, Tag, Dropdown, Avatar, Modal, Divider } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import Debounce from 'lodash-decorators/debounce';
@@ -7,7 +8,7 @@ import { Link } from 'dva/router';
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
-
+import { handleGetTime } from '../../utils/ajust'
 const { Header } = Layout;
 
 export default class GlobalHeader extends PureComponent {
@@ -21,25 +22,31 @@ export default class GlobalHeader extends PureComponent {
     }
     const newNotices = notices.map((notice) => {
       const newNotice = { ...notice };
-      if (newNotice.datetime) {
-        newNotice.datetime = moment(notice.datetime).fromNow();
+      if (newNotice.times) {
+        newNotice.datetime = moment(handleGetTime(notice.times)).fromNow();
       }
       // transform id to item key
-      if (newNotice.id) {
-        newNotice.key = newNotice.id;
+      if (newNotice.ID) {
+        newNotice.key = newNotice.ID;
       }
-      if (newNotice.extra && newNotice.status) {
-        const color = ({
-          todo: '',
-          processing: 'blue',
-          urgent: 'red',
-          doing: 'gold',
-        })[newNotice.status];
-        newNotice.extra = <Tag color={color} style={{ marginRight: 0 }}>{newNotice.extra}</Tag>;
+      if(newNotice.msgtype==1){
+        newNotice.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png';
+        newNotice.title = <span onClick = {()=>this.props.dispatch({type:'global/openMessage',payload:newNotice})}> {newNotice.title} </span>
+      }else{
+        newNotice.avatar = 'https://gw.alipayobjects.com/zos/rmsportal/GvqBnKhFgObvnSGkDsje.png';
       }
+      // if (newNotice.extra && newNotice.status) {
+      //   const color = ({
+      //     todo: '',
+      //     processing: 'blue',
+      //     urgent: 'red',
+      //     doing: 'gold',
+      //   })[newNotice.status];
+      //   newNotice.extra = <Tag color={color} style={{ marginRight: 0 }}>{newNotice.extra}</Tag>;
+      // }
       return newNotice;
     });
-    return groupBy(newNotices, 'type');
+    return groupBy(newNotices, 'msgtype');
   }
   toggle = () => {
     const { collapsed, onCollapse } = this.props;
@@ -66,6 +73,7 @@ export default class GlobalHeader extends PureComponent {
       </Menu>
     );
     const noticeData = this.getNoticeData();
+    console.log(noticeData)
     return (
       <Header className={styles.header}>
         {isMobile && (
@@ -107,19 +115,13 @@ export default class GlobalHeader extends PureComponent {
             popupAlign={{ offset: [20, -16] }}
           >
             <NoticeIcon.Tab
-              list={noticeData['通知']}
-              title="通知"
-              emptyText="你已查看所有通知"
-              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-            />
-            <NoticeIcon.Tab
-              list={noticeData['消息']}
+              list={noticeData['1']}
               title="消息"
               emptyText="您已读完所有消息"
               emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
             />
             <NoticeIcon.Tab
-              list={noticeData['待办']}
+              list={noticeData['2']}
               title="待办"
               emptyText="你已完成所有待办"
               emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
@@ -134,7 +136,33 @@ export default class GlobalHeader extends PureComponent {
             </Dropdown>
           ) : <Spin size="small" style={{ marginLeft: 8 }} />}
         </div>
+				<GlobalMessage />
       </Header>
     );
   }
+}
+
+
+@connect(({ loading, global }) => ({
+	modal:global.message.modal,
+	item: global.message.item,
+	loading: loading.models.global,
+}))
+class GlobalMessage extends PureComponent {
+	render(){
+		let { item } = this.props;
+		return (
+			<Modal
+				title={item.title}
+				footer={null}
+				width={500}
+				visible={this.props.modal}
+				onCancel={()=>this.props.dispatch({
+					type:'global/closeMessage'
+				})}
+			>
+				{item.content}
+			</Modal>
+		)
+	}
 }
