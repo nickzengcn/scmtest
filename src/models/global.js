@@ -1,4 +1,4 @@
-import { queryNotices } from '../services/api';
+import { queryNotices, readNotice } from '../services/api';
 
 export default {
   namespace: 'global',
@@ -21,7 +21,8 @@ export default {
         }
     }
       const data = yield call(queryNotices, payload);
-      const { list } = data;
+      let { list } = data;
+      list = list.filter(item=>item.isRead == undefined)
       yield put({
         type: 'saveNotices',
         payload: list,
@@ -29,6 +30,16 @@ export default {
       yield put({
         type: 'user/changeNotifyCount',
         payload: list.length,
+      });
+    },
+    *openMessage({ payload }, { call, put }) {
+      yield put({
+        type: 'open',
+        payload,
+      });
+      yield call(readNotice, {id: payload.ID});
+      yield put({
+        type: 'fetchNotices',
       });
     },
     *clearNotices({ payload }, { put, select }) {
@@ -45,7 +56,7 @@ export default {
   },
 
   reducers: {
-    openMessage(state, { payload }) {
+    open(state, { payload }) {
       return {
         ...state,
         message: {

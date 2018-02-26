@@ -74,9 +74,16 @@ export async function fakeRegister(params) {
     });
 }
 
-export async function queryNotices(parames) {
-    const str = getQueryStr(parames);
+export async function queryNotices(params) {
+    const str = getQueryStr(params);
     return request(`scm/Home/QueryMessageList${str}`, {
+        method: 'GET',
+    });
+}
+
+export async function readNotice(params) {
+    const str = getQueryStr(params);
+    return request(`scm/Home/ReadMessage${str}`, {
         method: 'GET',
     });
 }
