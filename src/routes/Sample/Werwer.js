@@ -6,7 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import ApplyForm from './ApplyForm';
 import ApplyDetail from './ApplyDetail';
 import InfiniteScroller from './InfiniteScroller';
-import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, renderAdvancedForm, renderForm } from '../Wave/DemandSearchFilter';
+import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, sampleAdvancedForm, renderSampleForm } from '../Wave/DemandSearchFilter';
 const { TextArea } = Input;
 
 
@@ -43,8 +43,8 @@ export default class Demand extends PureComponent {
     handleSearch = handleSearch.bind(this);
     toggleForm = toggleForm.bind(this);
     renderSimpleForm = renderSimpleForm.bind(this);
-    renderAdvancedForm = renderAdvancedForm.bind(this);
-    renderForm = renderForm.bind(this);
+    sampleAdvancedForm = sampleAdvancedForm.bind(this);
+    renderSampleForm = renderSampleForm.bind(this);
 
     componentDidMount() {
         const { dispatch } = this.props;
@@ -209,7 +209,7 @@ export default class Demand extends PureComponent {
                 <Card bordered={false}>
                     <div className={styles.tableList}>
                         <div className={styles.tableListForm}>
-                            {this.renderForm()}
+                            {this.renderSampleForm()}
                         </div>
                         <div className={styles.tableListOperator}>
                             <Checkbox onChange={this.handleChange} >全选</Checkbox>

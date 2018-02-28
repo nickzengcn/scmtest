@@ -13,6 +13,8 @@ import {
 } from 'antd';
 import React, { PureComponent } from 'react';
 
+const { Option } = Select;
+
 const FormItem = Form.Item;
 import { getTreeByLevel } from '../../utils/ajust';
 import styles from './Demand.less';
@@ -150,6 +152,7 @@ export function renderAdvancedForm() {
     },
   } = this.props;
   const realCategory = getTreeByLevel(category, 2);
+  const littleCategory = getTreeByLevel(category, 4);
 
   return (
     <Form onSubmit={this.handleSearch} layout="inline">
@@ -193,8 +196,8 @@ export function renderAdvancedForm() {
           </FormItem>
         </Col>
         <Col md={8} sm={24}>
-          <FormItem label="年份(多选)">
-            {getFieldDecorator('Year')(
+          <FormItem label="小小类(多选)">
+            {getFieldDecorator('xlid')(
               <Select
                 optionFilterProp="children"
                 mode="multiple"
@@ -203,7 +206,7 @@ export function renderAdvancedForm() {
                                 width: '100%',
                             }}
               >
-                {bandYear.map(item => <Option key={item.Key} value={item.Key}>{item.Value}</Option>)}
+                {littleCategory.map(item => <Option key={item.categoryid} value={item.categoryid}>{item.categoryname}</Option>)}
               </Select>
                         )}
           </FormItem>
@@ -247,3 +250,129 @@ export function renderForm() {
     ? this.renderAdvancedForm()
     : this.renderSimpleForm();
 }
+
+export function renderSampleForm(){
+    return this.state.expandForm
+    ? this.sampleAdvancedForm()
+    : this.renderSimpleForm();
+}
+
+export function sampleAdvancedForm() {
+    const { getFieldDecorator } = this.props.form;
+    const {
+      sysparames: {
+        band,
+        category,
+        bandYear,
+        vender,
+      },
+    } = this.props;
+    const realCategory = getTreeByLevel(category, 2);
+    const littleCategory = getTreeByLevel(category, 4);
+  
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row
+          gutter={{
+                  md: 8,
+                  lg: 24,
+                  xl: 48,
+              }}
+        >
+          <Col md={8} sm={24}>
+            <FormItem label="波段(多选)">
+              {getFieldDecorator('brand')(
+                <Select
+                  optionFilterProp="children"
+                  mode="multiple"
+                  placeholder="请选择"
+                  style={{
+                                  width: '100%',
+                              }}
+                >
+                  {band.map(item => <Option value={item.Key} key={item.Key}>{item.Value}</Option>)}
+                </Select>
+                          )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="风格(多选)">
+              {getFieldDecorator('fgid')(
+                <Select
+                  optionFilterProp="children"
+                  mode="multiple"
+                  placeholder="请选择"
+                  style={{
+                                  width: '100%',
+                              }}
+                >
+                  {realCategory.map(item => <Option key={item.categoryid} value={item.categoryid}>{item.categoryname}</Option>)}
+                </Select>
+                          )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="小小类(多选)">
+              {getFieldDecorator('xlid')(
+                <Select
+                  optionFilterProp="children"
+                  mode="multiple"
+                  placeholder="请选择"
+                  style={{
+                                  width: '100%',
+                              }}
+                >
+                  {littleCategory.map(item => <Option key={item.categoryid} value={item.categoryid}>{item.categoryname}</Option>)}
+                </Select>
+                          )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+          <FormItem label="供应商(多选)">
+            {getFieldDecorator('xlid')(
+              <Select
+                optionFilterProp="children"
+                mode="multiple"
+                placeholder="请选择"
+                style={{
+                                width: '100%',
+                            }}
+              >
+                {vender.map(item => <Option key={item.Key} value={item.Key}>{item.Value}</Option>)}
+              </Select>
+                        )}
+          </FormItem>
+        </Col>
+        </Row>
+        <div style={{
+                  overflow: 'hidden',
+              }}
+        >
+          <span
+            style={{
+                      float: 'right',
+                      marginBottom: 24,
+                  }}
+          >
+            <Button type="primary" htmlType="submit">查询</Button>
+            <Button
+              style={{
+                          marginLeft: 8,
+                      }}
+              onClick={this.handleFormReset}
+            >重置
+            </Button>
+            <a
+              style={{
+                          marginLeft: 8,
+                      }}
+              onClick={this.toggleForm}
+            >
+                          收起
+              <Icon type="up" />
+            </a>
+          </span>
+        </div>
+      </Form>
+    );
+  }

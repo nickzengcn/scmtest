@@ -80,18 +80,19 @@ export default {
             const band = yield call(paramesGetBand);
             const bandYear = yield call(paramesGetBandYear);
             const category = yield call(paramesGetCategory);
-            const shop = yield call(paramesGetShop);
-            const season = yield call(paramesGetBaseInfo,{ type: 'season'});
-            const sptype = yield call(paramesGetBaseInfo,{ type: 'sptype'});
-            const coloursum = yield call(paramesGetBaseInfo,{ type: 'coloursum'});
-            const clothse = yield call(paramesGetBaseInfo,{ type: 'clothse'});
-            const shoptype = yield call(paramesGetBaseInfo,{ type: 'shoptype'});
-            const shoplevel = yield call(paramesGetBaseInfo,{ type: 'shoplevel'});
-            const size = yield call(getDictSize);
+            // const shop = yield call(paramesGetShop);
+            // const season = yield call(paramesGetBaseInfo,{ type: 'season'});
+            // const sptype = yield call(paramesGetBaseInfo,{ type: 'sptype'});
+            // const coloursum = yield call(paramesGetBaseInfo,{ type: 'coloursum'});
+            // const clothse = yield call(paramesGetBaseInfo,{ type: 'clothse'});
+            // const shoptype = yield call(paramesGetBaseInfo,{ type: 'shoptype'});
+            // const shoplevel = yield call(paramesGetBaseInfo,{ type: 'shoplevel'});
+            // const size = yield call(getDictSize);
             // const scoreItem = yield call(paramesGetScoreItem);
-            // const vender = yield call(paramesGetVender);
+            const vender = yield call(paramesGetVender);
+            yield put({ type: 'updateAllParames', payload: {band, bandYear, category, vender} });
             // yield put({ type: 'updateAllParames', payload: {band, bandYear, category, shop, scoreItem, vender} });
-            yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum, size, clothse, shoplevel, shoptype } });
+            // yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum, size, clothse, shoplevel, shoptype } });
         },
     },
 
