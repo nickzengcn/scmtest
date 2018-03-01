@@ -217,13 +217,16 @@ export default class Demand extends PureComponent {
               modalVisible:false,
               uploading: false,
             });
-            message.success('upload successfully.');
+            this.props.dispatch({
+                type: 'waveDemand/fetch'
+            })
+            message.success('上传成功');
           },
           error: () => {
             this.setState({
                 uploading: false,
             });
-            message.error('upload failed.');
+            message.error('上传失败');
           },
         });
       }

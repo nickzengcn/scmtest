@@ -44,6 +44,7 @@ var SortableItem = sortable(Item);
 export class Detail extends PureComponent {
     state = {
         mask:undefined,
+        fileList:[],
     }
     handleNotOk = () =>{
         const { Id } = this.props.item.data;
@@ -80,6 +81,12 @@ export class Detail extends PureComponent {
             mask:e.target.value
         })
     }
+    onSortItems = (fileList) => {
+        this.setState({
+            fileList:[].concat(fileList),
+        });
+        // this.props.handleFileList([].concat(fileList));
+    }
     close = ()=>{
         this.props.dispatch({
             type:'sampleApply/setAudit',
@@ -97,9 +104,9 @@ export class Detail extends PureComponent {
                 flag, relflag, CompIsvisible, SupIsVisible, note, plid, ImageIdPath1, ImageIdPath2, ImageIdPath3,
                 ImageId1, ImageId2, ImageId3
     } = this.props.item.data;
-        let items = [ImageIdPath1, ImageIdPath2, ImageIdPath3];
+        const { mask, fileList } = this.state;
+        let items = fileList.length>0?fileList:[ImageIdPath1, ImageIdPath2, ImageIdPath3];
         const { modal } = this.props.item;
-        const { mask } = this.state;
         // const { name, userid } = currentUser;
 
         // console.log(user)
