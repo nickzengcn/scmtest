@@ -116,6 +116,22 @@ export default function request(url, options) {
         return response.json();
         });
   }
+
+  if (newOptions.method === 'file') {
+    return fetch(realUrl, {
+          method: 'POST',
+          body: newOptions.data
+        })
+        .then(checkPostStatus)
+        .then((response) => {
+			newOptions.success()
+        if (newOptions.method === 'DELETE' || response.status === 204) {
+			return response.text();
+        }
+        	return response.json();
+        });
+  }
+
   return fetch(realUrl, newOptions)
         .then(checkStatus)
         .then((response) => {
