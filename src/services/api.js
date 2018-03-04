@@ -218,9 +218,10 @@ export async function getWerewre(parames) {
  * like or dislike
  */
 export async function reqWerewre(parames) {
-    return request(`scm/FristAudition/${parames.type}`, {
-        method: 'POST',
-        body: parames.data,
+    const str = getQueryStr(parames.data);
+    return request(`Scm/FristAudition/${parames.type}${str}`, {
+        method: 'GET',
+        // body: parames.data,
     });
 }
 
@@ -238,7 +239,27 @@ export async function getSampleData(parames) {
  * 样衣审批
  */
 export async function reqSampleAudit(parames) {
-    return request(`scm/Sample/Audit${parames.type}`, {
+    return request(`Scm/Sample/CheckPhoto`, {
+        method: 'POST',
+        body: parames.data,
+    });
+}
+
+/**
+ * 审核信息字典
+ */
+export async function reqPhotoCheckList(parames) {
+    const str = getQueryStr(parames);
+    return request(`Scm/Dict/QueryPhotoCheckList${str}`, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 新增审核信息
+ */
+export async function photocheckModel(parames) {
+    return request(`Scm/Sample/CheckPhoto`, {
         method: 'POST',
         body: parames.data,
     });

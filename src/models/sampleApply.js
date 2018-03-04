@@ -67,9 +67,19 @@ export default {
     },
     *publish({ payload }, { call, put}) {
         const response = yield call(reqSamplePublish, payload);
-        yield put({
-            type: 'fetch',
-          });
+        if(response.code==1){
+            yield put({
+                type: 'fetch',
+            });
+        }
+    },
+    *judge({ payload }, { call, put}) {
+        const response = yield call(reqSamplePublish, payload);
+        if(response.code==1){
+            yield put({
+                type: 'fetch',
+            });
+        }
     },
   },
 

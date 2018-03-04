@@ -25,9 +25,9 @@ class Cards extends PureComponent {
         <Col sm={12} md={8} lg={6}>
           <Card
             hoverable
-            className={style.main}
+            className={style.main3}
                     // style={{ width: 300 }}
-            cover={<LazyLoadImg onClick={this.handleClick} />}
+            cover={<LazyLoadImg />}
           >
             <Meta
                 title={<Title data={data} />}
@@ -41,10 +41,10 @@ class Cards extends PureComponent {
 
 const Title = props =>
   (
-    <Row className="info">
+    <Row >
       <Col xs={24}>
-        <span className={style.left}>编号:{props.data.Id}</span>
-        <span className={style.right}>状态:{getJudge(props.data.status)}</span>
+        <span className={style.left}>编号:{props.data.sampleId}</span>
+        <span className={style.left}>状态:{getJudge(props.data.status)}</span>
       </Col>
       {/* <Col xs={24}>
         <span className={style.right}>总得分：123</span>
@@ -108,7 +108,7 @@ export default class InfiniteList extends React.Component {
 
             {loading && hasMore && <Spin className="demo-loading" />}
           </InfiniteScroll>
-          <Detail user={user} funs={funs} modal={modal} close={this.handleCloseModal} data={modalData} />
+          {/* <Detail user={user} funs={funs} modal={modal} close={this.handleCloseModal} data={modalData} /> */}
         </div>
       );
     }

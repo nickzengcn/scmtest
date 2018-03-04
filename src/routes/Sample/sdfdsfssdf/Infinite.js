@@ -7,8 +7,8 @@ import React, { PureComponent } from 'react';
 import style from '../style.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import { LazyLoadImg, getJudge } from '../../../utils/ajust';
-import { Detail } from './Detail';
-
+// import { Detail } from './Detail';
+import { LLContent } from '../InfiniteScroller';
 
 
 
@@ -27,7 +27,7 @@ class Cards extends PureComponent {
             hoverable
             className={style.main}
                     // style={{ width: 300 }}
-            cover={<LazyLoadImg onClick={this.handleClick} />}
+            cover={<LLContent onClick={this.handleClick} />}
           >
             <Meta
                 title={<Title data={data} />}
@@ -39,18 +39,23 @@ class Cards extends PureComponent {
     }
 }
 
+// export const LLContent = props => (
+//     <div {...props} style={{position:'relative'}}>
+//         <LazyLoadImg />
+//         <Icon className={style.searchIcon} type="search" />
+//     </div>
+// )
+
 const Title = props =>
   (
     <Row className="info">
       <Col xs={24}>
-        <span className={style.left}>编号:{props.data.Id}</span>
+        <span className={style.left}>编号:{props.data.sampleId}</span>
         <span className={style.left}>店长:{getJudge(props.data.status)}</span>
-        <span className={style.right}><Icon type="heart" />＋25</span>
-      </Col>
-      <Col xs={24}>
+        <span className={style.left}><Icon type="heart" />＋25</span>
         <span className={style.left}>买手:{props.data.Id}</span>
         <span className={style.left}>采购:{getJudge(props.data.status)}</span>
-        <span className={style.right}><Icon type="dislike" />＋3</span>
+        <span className={style.left}><Icon type="dislike" />＋3</span>
       </Col>
     </Row>
   );

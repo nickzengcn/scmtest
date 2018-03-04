@@ -27,7 +27,7 @@ class Cards extends PureComponent {
             hoverable
             className={style.main}
                     // style={{ width: 300 }}
-            cover={<LazyLoadImg onClick={this.handleClick} />}
+            cover={<LLContent onClick={this.handleClick} />}
           >
             <Meta
                         // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
@@ -40,12 +40,19 @@ class Cards extends PureComponent {
     }
 }
 
+export const LLContent = props => (
+    <div {...props} style={{position:'relative'}}>
+        <LazyLoadImg />
+        <Icon className={style.searchIcon} type="search" />
+    </div>
+)
+
 const Title = props =>
   (
-    <Row className="info">
+    <Row>
       <Col xs={24}>
-        <span className={style.left}>编号:{props.data.Id}</span>
-        <span className={style.right}>状态:{getJudge(props.data.status)}</span>
+        <span className={style.left}>编号:{props.data.sampleId}</span>
+        <span className={style.left}>状态:{getJudge(props.data.status)}</span>
       </Col>
       {/* <Col xs={24}>
         <span className={style.right}>总得分：123</span>

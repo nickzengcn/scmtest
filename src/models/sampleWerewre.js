@@ -1,5 +1,5 @@
 import { getWerewre, reqWerewre } from '../services/api';
-
+import { message } from 'antd';
 const namespace = 'sampleWerewre';
 
 export default {
@@ -33,10 +33,16 @@ export default {
         },
         *audit({ payload }, { call, put }) {
             const response = yield call(reqWerewre, payload);
-            //关闭弹框
-            yield put({
-                type: 'fetch'
-            });
+
+            if(response.code==1){
+                message.success(response.errMsg)
+                //关闭弹框
+                yield put({
+                    type: 'fetch'
+                });
+            }else{
+                message.warn(response.errMsg)
+            }
         },
     },
 

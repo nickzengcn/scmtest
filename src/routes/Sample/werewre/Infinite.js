@@ -7,31 +7,50 @@ import React, { PureComponent } from 'react';
 import style from '../style.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import { LazyLoadImg, getJudge } from '../../../utils/ajust';
+import { connect } from 'dva';
 
 
 
-
+@connect()
 class Cards extends PureComponent {
     handleClick = () => {
         this.props.handleData();
     }
     handleLike = () => {
-        console.log('like')
+        const { data } = this.props;
+        this.props.dispatch({
+            type:'sampleWerewre/audit',
+            payload:{
+                type:'Like',
+                data:{
+                    sampleId:data.SampleId
+                },
+            }
+        })
     }
     handleDislike = () => {
-        console.log('unlike')
+        const { data } = this.props;
+        this.props.dispatch({
+            type:'sampleWerewre/audit',
+            payload:{
+                type:'UnLike',
+                data:{
+                    sampleId:data.SampleId
+                },
+            }
+        })    
     }
     render() {
         const { data } = this.props;
         return (
-            <Col sm={12} md={8} lg={6}>
+            <Col sm={12} lg={8} xl={6} xxl={4}>
                 <Card
                     hoverable
                     className={style.main2}
-                    onClick={this.handleClick}
+                    
                     // style={{ width: 300 }}
-                    title={"编号：" + data.Code}
-                    cover={<LazyLoadImg />}
+                    title={"编号：" + data.SampleId}
+                    cover={<LazyLoadImg onClick={this.handleClick}/>}
                     actions={[<Dislike onClick={this.handleDislike} data={data.UnLike}/>, <Like onClick={this.handleLike} data={data.Like}/>]}
 
                 >
@@ -46,16 +65,16 @@ class Cards extends PureComponent {
 
 const Dislike = props =>
     (
-        <span>
-            <Icon style={{ fontSize: 20 }} {...props} type="dislike" />
+        <span {...props} >
+            <Icon style={{ fontSize: 20 }} type="dislike" />
             <span>({props.data})</span>
         </span>
     );
 
 const Like = props =>
     (
-        <span>
-            <Icon style={{ fontSize: 20 }} {...props} type="heart" />
+        <span {...props} >
+            <Icon style={{ fontSize: 20 }}type="heart" />
             <span>({props.data})</span>
         </span>
     );

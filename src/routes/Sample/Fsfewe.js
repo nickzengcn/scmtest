@@ -6,7 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import ApplyForm from './ApplyForm';
 import ApplyDetail from './ApplyDetail';
 import InfiniteScroller from './fsfewe/Infinite';
-import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, renderAdvancedForm, renderForm } from '../Wave/DemandSearchFilter';
+import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, haixuanAdvancedForm, renderHaixuanForm } from '../Wave/DemandSearchFilter';
 const { TextArea } = Input;
 
 
@@ -43,8 +43,8 @@ export default class Demand extends PureComponent {
     handleSearch = handleSearch.bind(this);
     toggleForm = toggleForm.bind(this);
     renderSimpleForm = renderSimpleForm.bind(this);
-    renderAdvancedForm = renderAdvancedForm.bind(this);
-    renderForm = renderForm.bind(this);
+    haixuanAdvancedForm = haixuanAdvancedForm.bind(this);
+    renderForm = renderHaixuanForm.bind(this);
 
     componentDidMount() {
         const { dispatch } = this.props;
@@ -200,7 +200,8 @@ export default class Demand extends PureComponent {
             Check:this.itemCheck,
             Audit: this.handleAudit,
         };
-
+        const length = list.filter(item=>item.checked).length
+        console.log(length)
         return (
             <PageHeaderLayout title="样衣海选发布">
                 <Card bordered={false}>
@@ -223,6 +224,9 @@ export default class Demand extends PureComponent {
                     visible={modalVisible}
                     onCancel={() => this.handleModalVisible(false)}
                 >
+                    <Row>
+                        你当前已选择了{length?length:"0"}个样衣。
+                    </Row>
                     <Row className="xw-tx-center" style={{ marginTop: 24 }}>
                         <Button onClick={this.handleGroupSubmit} type="primary" >
                             提交

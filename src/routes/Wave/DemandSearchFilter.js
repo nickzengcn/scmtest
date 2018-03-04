@@ -257,7 +257,7 @@ export function renderSampleForm(){
     : this.renderSimpleForm();
 }
 
-export function sampleAdvancedForm() {
+export function sampleAdvancedForm(children = null) {
     const { getFieldDecorator } = this.props.form;
     const {
       sysparames: {
@@ -328,21 +328,22 @@ export function sampleAdvancedForm() {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-          <FormItem label="供应商(多选)">
-            {getFieldDecorator('xlid')(
-              <Select
-                optionFilterProp="children"
-                mode="multiple"
-                placeholder="请选择"
-                style={{
-                                width: '100%',
-                            }}
-              >
-                {vender.map(item => <Option key={item.Key} value={item.Key}>{item.Value}</Option>)}
-              </Select>
-                        )}
-          </FormItem>
-        </Col>
+            <FormItem label="供应商(多选)">
+                {getFieldDecorator('gys')(
+                <Select
+                    optionFilterProp="children"
+                    mode="multiple"
+                    placeholder="请选择"
+                    style={{
+                                    width: '100%',
+                                }}
+                >
+                    {vender.map(item => <Option key={item.Key} value={item.Key}>{item.Value}</Option>)}
+                </Select>
+                            )}
+            </FormItem>
+            </Col>
+            {children}
         </Row>
         <div style={{
                   overflow: 'hidden',
@@ -376,3 +377,35 @@ export function sampleAdvancedForm() {
       </Form>
     );
   }
+/**
+ * 海选发布高级筛选
+ */
+export function haixuanAdvancedForm() {
+    const { getFieldDecorator } = this.props.form;
+    this.sampleAdvancedForm = sampleAdvancedForm.bind(this);
+    return this.sampleAdvancedForm(
+        <Col md={8} sm={24}>
+            <FormItem label="海选状态">
+                {getFieldDecorator('hxtype')(
+                <Select
+                    optionFilterProp="children"
+                    mode="multiple"
+                    placeholder="请选择"
+                    style={{
+                                    width: '100%',
+                                }}
+                >
+                    <Option key={1} value={1}>待定</Option>
+                    <Option key={2} value={2}>未通过</Option>
+                </Select>
+                            )}
+            </FormItem>
+            </Col>
+    );
+}
+
+export function renderHaixuanForm(){
+    return this.state.expandForm
+    ? this.haixuanAdvancedForm()
+    : this.renderSimpleForm();
+}

@@ -1,5 +1,5 @@
 import { paramesGetBand, paramesGetBandYear, paramesGetCategory, getDictSize, 
-    paramesGetShop, paramesGetScoreItem, paramesGetVender, paramesGetBaseInfo } from '../services/api';
+    paramesGetShop, paramesGetScoreItem, paramesGetVender, paramesGetBaseInfo, reqPhotoCheckList } from '../services/api';
 // import { setAuthority } from '../utils/authority';
 // import { routerRedux } from 'dva/router';
 
@@ -20,6 +20,7 @@ export default {
         clothse:[],
         shoplevel:[],
         shoptype:[],
+        photoCheckList:[]
         // currentAuthority: 'guest'
     },
 
@@ -75,6 +76,13 @@ export default {
         *getSize(_, { call, put }) {
             const response = yield call(getDictSize);
             yield put({ type: 'updateSize', payload: response });
+        },
+        *getPhotoCheckList(_, { call, put }) {
+            const response = yield call(reqPhotoCheckList,{
+                start: 0,
+                length: 9,
+            });
+            yield put({ type: 'updatePhotoCheckList', payload: response.list });
         },
         *getAllParames(_, { call, put }) {
             const band = yield call(paramesGetBand);
@@ -168,6 +176,12 @@ export default {
             return {
                 ...state,
                 shoptype: payload,
+            };
+        },
+        updatePhotoCheckList(state, { payload }) {
+            return {
+                ...state,
+                photoCheckList: payload,
             };
         },
         updateSize(state, { payload }) {
