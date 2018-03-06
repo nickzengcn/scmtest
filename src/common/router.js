@@ -98,9 +98,9 @@ export const getRouterData = (app) => {
             component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/Sample/First')),
         },
         // 样衣初选收货
-        // '/roundone/werewr': {
-        //   component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/Roundone/WereWr')),
-        // },
+        '/roundone/werewr': {
+          component: dynamicWrapper(app, ['sampleWerewr'], () => import('../routes/Roundone/Werewr')),
+        },
         // 样衣照片审核
         '/sample/werwer': {
             component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/Sample/Werwer')),

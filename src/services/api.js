@@ -215,6 +215,17 @@ export async function getWerewre(parames) {
 }
 
 /**
+ * 获取样衣收货list
+ */
+export async function getTakeSample(parames) {
+    const str = getQueryStr(parames);
+    return request(`scm/FristAudition/ImageList${str}`, {
+        method: 'GET',
+    });
+}
+
+
+/**
  * like or dislike
  */
 export async function reqWerewre(parames) {

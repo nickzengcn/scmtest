@@ -11,7 +11,7 @@ import {
   InputNumber,
   DatePicker,
 } from 'antd';
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 
 const { Option } = Select;
 
@@ -400,12 +400,53 @@ export function haixuanAdvancedForm() {
                 </Select>
                             )}
             </FormItem>
-            </Col>
+        </Col>
     );
 }
 
 export function renderHaixuanForm(){
     return this.state.expandForm
     ? this.haixuanAdvancedForm()
+    : this.renderSimpleForm();
+}
+
+/**
+ * 样衣初选收货
+ */
+export function shouhuoadvancedForm() {
+    const { getFieldDecorator } = this.props.form;
+    this.sampleAdvancedForm = sampleAdvancedForm.bind(this);
+    return this.sampleAdvancedForm(
+        <Fragment>
+            <Col md={8} sm={24}>
+                <FormItem label="快递公司">
+                    {getFieldDecorator('kuaidi')(
+                    <Select
+                        optionFilterProp="children"
+                        mode="multiple"
+                        placeholder="请选择"
+                        style={{
+                                        width: '100%',
+                                    }}
+                    >
+                        <Option key={1} value={1}>待定</Option>
+                        <Option key={2} value={2}>未通过</Option>
+                    </Select>
+                                )}
+                </FormItem>
+            </Col>
+            <Col md={8} sm={24}>
+                <FormItem label="快递单号">
+                    {getFieldDecorator('danhao')(
+                    <Input     />
+                    )}
+                </FormItem>
+            </Col>
+        </Fragment>
+    )
+}
+export function renderShouhuoForm(){
+    return this.state.expandForm
+    ? this.shouhuoadvancedForm()
     : this.renderSimpleForm();
 }
