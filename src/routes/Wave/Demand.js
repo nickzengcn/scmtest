@@ -194,7 +194,7 @@ export default class Demand extends PureComponent {
             .dispatch({type: 'waveDemand/setQueryData', payload: item});
     }
     downloadTemple = () => {
-        window.open('http://www.baidu.com');
+        window.open('../../template/wavedemand.xlsx');
     }
     handleUpload = () => {
         const { fileList } = this.state;

@@ -6,7 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import ApplyForm from './ApplyForm';
 import ApplyDetail from './ApplyDetail';
 import InfiniteScroller from './sdfdsfssdf/Infinite';
-import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, renderAdvancedForm, renderForm } from '../Wave/DemandSearchFilter';
+import { handleFormReset, handleSearch, toggleForm, renderSimpleForm, sampleAdvancedForm, renderSampleForm } from '../Wave/DemandSearchFilter';
 const { TextArea } = Input;
 
 
@@ -43,8 +43,8 @@ export default class Demand extends PureComponent {
     handleSearch = handleSearch.bind(this);
     toggleForm = toggleForm.bind(this);
     renderSimpleForm = renderSimpleForm.bind(this);
-    renderAdvancedForm = renderAdvancedForm.bind(this);
-    renderForm = renderForm.bind(this);
+    sampleAdvancedForm = sampleAdvancedForm.bind(this);
+    renderForm = renderSampleForm.bind(this);
 
     componentDidMount() {
         const { dispatch } = this.props;

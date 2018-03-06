@@ -257,7 +257,7 @@ export function renderSampleForm(){
     : this.renderSimpleForm();
 }
 
-export function sampleAdvancedForm(children = null) {
+export function sampleAdvancedForm(children = null, children2 = null) {
     const { getFieldDecorator } = this.props.form;
     const {
       sysparames: {
@@ -269,7 +269,13 @@ export function sampleAdvancedForm(children = null) {
     } = this.props;
     const realCategory = getTreeByLevel(category, 2);
     const littleCategory = getTreeByLevel(category, 4);
-  
+    let childrens = [];
+    for (const key in arguments) {
+        if (arguments.hasOwnProperty(key)) {
+            const element = arguments[key];
+            childrens.push(element);
+        }
+    }
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row
@@ -343,7 +349,9 @@ export function sampleAdvancedForm(children = null) {
                             )}
             </FormItem>
             </Col>
-            {children}
+            {childrens}
+            {/* {children}
+            {children2} */}
         </Row>
         <div style={{
                   overflow: 'hidden',
@@ -384,7 +392,7 @@ export function haixuanAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
     this.sampleAdvancedForm = sampleAdvancedForm.bind(this);
     return this.sampleAdvancedForm(
-        <Col md={8} sm={24}>
+        <Col md={8} sm={24} key={1}>
             <FormItem label="海选状态">
                 {getFieldDecorator('hxtype')(
                 <Select
@@ -417,8 +425,7 @@ export function shouhuoadvancedForm() {
     const { getFieldDecorator } = this.props.form;
     this.sampleAdvancedForm = sampleAdvancedForm.bind(this);
     return this.sampleAdvancedForm(
-        <Fragment>
-            <Col md={8} sm={24}>
+            (<Col md={8} sm={24} key={1}>
                 <FormItem label="快递公司">
                     {getFieldDecorator('kuaidi')(
                     <Select
@@ -434,15 +441,16 @@ export function shouhuoadvancedForm() {
                     </Select>
                                 )}
                 </FormItem>
-            </Col>
-            <Col md={8} sm={24}>
+            </Col>),(
+            <Col md={8} sm={24} key={2}>
                 <FormItem label="快递单号">
                     {getFieldDecorator('danhao')(
                     <Input     />
                     )}
                 </FormItem>
             </Col>
-        </Fragment>
+            )
+        
     )
 }
 export function renderShouhuoForm(){
