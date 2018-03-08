@@ -115,7 +115,7 @@ export const getRouterData = (app) => {
         },
         // 样衣海选决策
         '/sample/sdfdsfssdf': {
-            component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/Sample/Sdfdsfssdf')),
+            component: dynamicWrapper(app, ['sampleJudge'], () => import('../routes/Sample/Sdfdsfssdf')),
         },
         //样衣一审打分
         '/judgeone/erwerwe': {

@@ -7,14 +7,15 @@ import React, { PureComponent } from 'react';
 import style from '../style.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import { LazyLoadImg, getJudge } from '../../../utils/ajust';
-// import { Detail } from './Detail';
+import { Detail } from './Detail';
 import { LLContent } from '../InfiniteScroller';
 
 
 
 class Cards extends PureComponent {
     handleClick = () => {
-        this.props.handleData();
+        const { data } = this.props;
+        this.props.handleData(data);
     }
     handleChange = (e)=>{
         this.props.handleCheck(e.target.value)
@@ -50,12 +51,12 @@ const Title = props =>
   (
     <Row className="info">
       <Col xs={24}>
-        <span className={style.left}>编号:{props.data.sampleId}</span>
-        <span className={style.left}>店长:{getJudge(props.data.status)}</span>
-        <span className={style.left}><Icon type="heart" />＋25</span>
-        <span className={style.left}>买手:{props.data.Id}</span>
-        <span className={style.left}>采购:{getJudge(props.data.status)}</span>
-        <span className={style.left}><Icon type="dislike" />＋3</span>
+        <span className={style.left}>编号:{props.data.SampleId}</span>
+        <span className={style.left}>总得分:{props.data.Score}</span>
+        <span className={style.left}>买手:{props.data.Buy1}/{props.data.Buy2}</span>
+        <span className={style.left}>店长:{props.data.Shop1}/{props.data.Shop2}</span>
+        <span className={style.left}>采购经理:{props.data.Purchase1}/{props.data.Shop2}</span>
+        <span className={style.left}>外围评审:{props.data.status}</span>
       </Col>
     </Row>
   );
@@ -111,12 +112,12 @@ export default class InfiniteList extends React.Component {
                         xl: 48,
                         }}
             >
-              {data.map((item, index) => <Cards handleCheck={this.handleCheck(item,index)} handleData={this.handleOpenModal(item)} key={index} data={item} />)}
+              {data.map((item, index) => <Cards handleCheck={this.handleCheck(item,index)} handleData={this.props.handleOpen} key={index} data={item} />)}
             </Row>
 
             {loading && hasMore && <Spin className="demo-loading" />}
           </InfiniteScroll>
-          {/* <Detail user={user} funs={funs} modal={modal} close={this.handleCloseModal} data={modalData} /> */}
+          <Detail user={user} funs={funs} modal={modal} close={this.handleCloseModal} data={modalData} />
         </div>
       );
     }

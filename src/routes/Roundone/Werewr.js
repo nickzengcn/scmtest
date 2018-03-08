@@ -13,7 +13,7 @@ import { getColumns, getWidthSum, handleGetTime, getDateFromTime, getJudge, getR
     sysparames,
     // user,
     defaultType: sampleWerewr.defaultType,
-    loading: loading.models.sampleApply,
+    loading: loading.models.sampleWerewr,
 }))
 @Form.create()
 export default class SampleWerewr extends PureComponent {
@@ -31,7 +31,7 @@ export default class SampleWerewr extends PureComponent {
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({
-            type: 'sampleApply/fetch',
+            type: 'sampleWerewr/fetch',
             payload: {
                 start: 0,
                 length: 9,
@@ -60,7 +60,7 @@ export default class SampleWerewr extends PureComponent {
         }
 
         dispatch({
-            type: 'sampleApply/fetch',
+            type: 'sampleWerewr/fetch',
             payload: params,
         });
     }
@@ -69,12 +69,12 @@ export default class SampleWerewr extends PureComponent {
         this.setState({ selectedRowKeys });
     }
     render() {
-        // const { sampleApply: { data: { list } }, user, loading } = this.props;
+        // const { sampleWerewr: { data: { list } }, user, loading } = this.props;
         const columns = getColumns([
-            // { dataIndex: 'id', title: '系统ID' },
-            { dataIndex: 'tupian', title: '样衣编号' },
-            { dataIndex: 'bandid', title: '大类' },
-            { dataIndex: 'bandname', title: '小小类' },
+            { dataIndex: 'ImageIdPath1', title: '图片' },
+            { dataIndex: 'sampleId', title: '样衣编号' },
+            { dataIndex: 'dlText', title: '大类' },
+            { dataIndex: 'plText', title: '小小类' },
             { dataIndex: 'fgText', title: '发货数量' },
             { dataIndex: 'plText', title: '快递单号' },
             { dataIndex: 'xlText', title: '供应商名称' },

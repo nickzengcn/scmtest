@@ -18,12 +18,12 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
-@connect(({ sampleApply, loading, user, sysparames }) => ({
-    sampleApply,
+@connect(({ sampleJudge, loading, user, sysparames }) => ({
+    sampleJudge,
     sysparames,
     user,
-    defaultType: sampleApply.defaultType,
-    loading: loading.models.sampleApply,
+    defaultType: sampleJudge.defaultType,
+    loading: loading.models.sampleJudge,
 }))
 @Form.create()
 export default class Demand extends PureComponent {
@@ -49,7 +49,7 @@ export default class Demand extends PureComponent {
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({
-            type: 'sampleApply/fetch',
+            type: 'sampleJudge/fetch',
             payload: {
                 start: 0,
                 length: 9,
@@ -78,7 +78,7 @@ export default class Demand extends PureComponent {
         }
 
         dispatch({
-            type: 'sampleApply/fetch',
+            type: 'sampleJudge/fetch',
             payload: params,
         });
     }
@@ -106,7 +106,7 @@ export default class Demand extends PureComponent {
         });
     }
     handleGroupSubmit = () => {
-        const { sampleApply: { data: { list } }, loading } = this.props;
+        const { sampleJudge: { data: { list } }, loading } = this.props;
         const { mask } = this.state
         let ids = [];
         for (let index = 0; index < list.length; index++) {
@@ -118,7 +118,7 @@ export default class Demand extends PureComponent {
         ids = ids.join(',')
     
         this.props.dispatch({
-            type: 'sampleApply/publish',
+            type: 'sampleJudge/publish',
             payload: {
                 ids
             },
@@ -128,7 +128,7 @@ export default class Demand extends PureComponent {
     }
     handleAdd = () => {
         this.props.dispatch({
-            type: 'sampleApply/add',
+            type: 'sampleJudge/add',
             payload: {
                 description: this.state.addInputValue,
             },
@@ -146,7 +146,7 @@ export default class Demand extends PureComponent {
             content: `波段号为${item.bandid}, 波段名称为${item.bandname}会在数据库中删除，请注意！`,
             onOk: () => {
                 this.props.dispatch({
-                    type: 'sampleApply/itemHandle',
+                    type: 'sampleJudge/itemHandle',
                     payload: {
                         type: 'Delete',
                         data: { id: item.id },
@@ -158,48 +158,41 @@ export default class Demand extends PureComponent {
             },
         });
     }
-    hanldeEditData = item => () => {
+    hanldeEditData =  (item) => {
         this.props.dispatch({
-            type: 'sampleApply/setEditData',
+            type: 'sampleJudge/setEditData',
             payload: item,
         });
     }
     queryData = item => () => {
         this.props.dispatch({
-            type: 'sampleApply/setQueryData',
+            type: 'sampleJudge/setQueryData',
             payload: item,
         });
     }
-    handleAudit = item => {
+    handleOpen = item => {
         this.props.dispatch({
-            type: 'sampleApply/setAudit',
+            type: 'sampleJudge/setItem',
             payload: item,
         });
     }
     handleChange = (e)=>{
         const Check = e.target.checked;
         this.props.dispatch({
-            type: 'sampleApply/allCheck',
+            type: 'sampleJudge/allCheck',
             payload: Check,
         });
     }
     itemCheck = item => {
         this.props.dispatch({
-            type: 'sampleApply/setItemCheck',
+            type: 'sampleJudge/setItemCheck',
             payload: item,
         });
     }
     render() {
-        const { sampleApply: { data: { list } }, user, loading } = this.props;
+        const { sampleJudge: { data: { list } }, user, loading } = this.props;
         const { selectedRows, modalVisible, addInputValue, queryVisible, editItem } = this.state;
-        const funs = {
-            Create: this.handleAdd,
-            Delete: this.hanldeDeleteData,
-            Edit: this.hanldeEditData,
-            Query: this.queryData,
-            Check:this.itemCheck,
-            Audit: this.handleAudit,
-        };
+        
 
         return (
             <PageHeaderLayout title="样衣海选决策">
@@ -214,7 +207,7 @@ export default class Demand extends PureComponent {
                                 海选发布
                             </Button>
                         </div>
-                        <InfiniteScroller user={user} funs={funs} data={list} loading={loading} />
+                        <InfiniteScroller handleOpen={this.handleOpen} user={user}  data={list} loading={loading} />
                     </div>
                 </Card>
                 <Modal

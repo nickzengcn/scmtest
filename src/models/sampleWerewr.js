@@ -1,4 +1,4 @@
-import { getWerewre, getTakeSample } from '../services/api';
+import { getSampleData, getTakeSample } from '../services/api';
 import { message } from 'antd';
 const namespace = 'sampleWerewr';
 
@@ -25,7 +25,7 @@ export default {
                     length: 9,
                 }
             }
-            const response = yield call(getTakeSample, payload);
+            const response = yield call(getSampleData, payload);
             yield put({
                 type: 'save',
                 payload: response,

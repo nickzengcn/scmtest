@@ -48,21 +48,21 @@ export class Detail extends PureComponent {
         fileList: [],
         photoCheckList: [],
     }
-    handleNotOk = () => {
-        const { Id } = this.props.item.data;
-        const { mask } = this.state;
-        const payload = {
-            data: {
-                ids: Id,
-                mask
-            },
-            type: 'No'
-        };
-        this.props.dispatch({
-            type: 'sampleApply/audit',
-            payload
-        })
-    }
+    // handleNotOk = () => {
+    //     const { Id } = this.props.item.data;
+    //     const { mask } = this.state;
+    //     const payload = {
+    //         data: {
+    //             ids: Id,
+    //             mask
+    //         },
+    //         type: 'No'
+    //     };
+    //     this.props.dispatch({
+    //         type: 'sampleApply/audit',
+    //         payload
+    //     })
+    // }
     componentDidUpdate(){
         if(this.props.photoCheckList.length==0){
             this.props.dispatch({
@@ -70,7 +70,7 @@ export class Detail extends PureComponent {
             })
         }
     }
-    handleOk = () => {
+    handleOk = (value) =>() => {
         const { Id } = this.props.item.data;
         const { photoCheckList } = this.state;
         for (let index = 0; index < photoCheckList.length; index++) {
@@ -78,7 +78,8 @@ export class Detail extends PureComponent {
             element.sampleId = Id
         }
         const payload = {
-            data: photoCheckList
+            data: photoCheckList,
+            type: value,
         };
         this.props.dispatch({
             type: 'sampleApply/audit',
@@ -126,11 +127,13 @@ export class Detail extends PureComponent {
         if(this.state.photoCheckList.length==0){
             this.state.photoCheckList = this.props.photoCheckList;
         }
+        // 默认列表为选中
+
         const columns = [
             { dataIndex: 'seqno', title: '序号' },
             { dataIndex: 'checkinfo', title: '审核标准' },
             { dataIndex: 'checkflag', title: '是否通过',render:(value,row,index)=>{
-                return <Checkbox value={value==0} onChange={this.onChangeCheck(index)} />
+                return <Checkbox value={value==0} defaultChecked={true} onChange={this.onChangeCheck(index)} />
             } },
             { dataIndex: 'reason', title: '审核不通过原因' },
         ]
@@ -148,7 +151,7 @@ export class Detail extends PureComponent {
                         <Col className={style.lable} xs={24}
                             sm={7}>
                             样衣图片：
-                    </Col>
+                        </Col>
                         <Col xs={24}
                             sm={12}
                             md={10}>
@@ -292,9 +295,9 @@ export class Detail extends PureComponent {
                     </Row>
                 </Card>
                 <Row className="xw-tx-center">
-                    {/* <Button style={{ marginRight: 24 }} onClick={() => this.close()}>取消</Button> */}
-                    <Button style={{ margin: "20px 0 0 " }} type="primary" onClick={this.handleOk}>提交</Button>
-                    {/* <Button onClick={this.handleNotOk}>不及格</Button> */}
+                    <Button style={{ marginRight: 24 }} onClick={this.handleOk(-1)}>不通过</Button>
+                    <Button style={{ margin: "20px 0 0 " }} type="primary" onClick={this.handleOk(1)}>通过</Button>
+                    <Button onClick={this.handleOk(0)}>待定</Button>
                 </Row>
             </Modal>
         );

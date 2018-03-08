@@ -3,12 +3,10 @@ import { connect } from 'dva';
 import { Modal, Card, Badge, Table, Button, Divider, Row, Col, Layout, Input } from 'antd';
 import DescriptionList from '../../../components/DescriptionList';
 import { sortable } from 'react-sortable';
-import { LazyLoadImg } from '../../../utils/ajust';
 import style from '../style.less';
+import { getColumns, getWidthSum, handleGetTime, getDateFromTime, getJudge, ifNotJudge, LazyLoadImg } from '../../../utils/ajust';
 const { TextArea } = Input;
-
 const { Description } = DescriptionList;
-import { getColumns, getWidthSum, handleGetTime, getDateFromTime, getJudge, ifNotJudge } from '../../../utils/ajust';
 // import { Button } from 'antd/lib/radio';
 
 @connect(({ sampleApply, loading }) => ({

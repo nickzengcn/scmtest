@@ -247,10 +247,21 @@ export async function getSampleData(parames) {
 }
 
 /**
+ * 样衣决策list
+ */
+export async function getSampleJudgeData(parames) {
+    const str = getQueryStr(parames);
+    return request(`scm/Sample/GenImageList${str}`, {
+        method: 'GET',
+    });
+}
+
+
+/**
  * 样衣审批
  */
 export async function reqSampleAudit(parames) {
-    return request(`Scm/Sample/CheckPhoto`, {
+    return request(`Scm/Sample/CheckPhoto?status=${parames.type}`, {
         method: 'POST',
         body: parames.data,
     });
