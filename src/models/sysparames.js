@@ -1,4 +1,4 @@
-import { paramesGetBand, paramesGetBandYear, paramesGetCategory, getDictSize, 
+import { paramesGetBand, paramesGetBandYear, paramesGetCategory, getDictSize, getSysCategory, reqScoreItem, 
     paramesGetShop, paramesGetScoreItem, paramesGetVender, paramesGetBaseInfo, reqPhotoCheckList } from '../services/api';
 // import { setAuthority } from '../utils/authority';
 // import { routerRedux } from 'dva/router';
@@ -20,7 +20,9 @@ export default {
         clothse:[],
         shoplevel:[],
         shoptype:[],
-        photoCheckList:[]
+        photoCheckList:[],
+        sysCategory:[],
+        scoreItem:[],
         // currentAuthority: 'guest'
     },
 
@@ -84,10 +86,19 @@ export default {
             });
             yield put({ type: 'updatePhotoCheckList', payload: response.list });
         },
+        *getSysCategory(_, { call, put }) {
+            const response = yield call(reqSysCategory);
+            yield put({ type: 'updateSysCategory', payload: response });
+        },
+        *getScoreItem(_, { call, put }) {
+            const response = yield call(reqScoreItem);
+            yield put({ type: 'updateScoreItem', payload: response });
+        },
         *getAllParames(_, { call, put }) {
             const band = yield call(paramesGetBand);
             const bandYear = yield call(paramesGetBandYear);
             const category = yield call(paramesGetCategory);
+            const sysCategory = yield call(getSysCategory);
             // const shop = yield call(paramesGetShop);
             // const season = yield call(paramesGetBaseInfo,{ type: 'season'});
             // const sptype = yield call(paramesGetBaseInfo,{ type: 'sptype'});
@@ -97,8 +108,8 @@ export default {
             // const shoplevel = yield call(paramesGetBaseInfo,{ type: 'shoplevel'});
             // const size = yield call(getDictSize);
             // const scoreItem = yield call(paramesGetScoreItem);
-            const vender = yield call(paramesGetVender);
-            yield put({ type: 'updateAllParames', payload: {band, bandYear, category, vender} });
+            // const vender = yield call(paramesGetVender);
+            yield put({ type: 'updateAllParames', payload: {band, bandYear, category, sysCategory} });
             // yield put({ type: 'updateAllParames', payload: {band, bandYear, category, shop, scoreItem, vender} });
             // yield put({ type: 'updateAllParames', payload: { band, bandYear, category, shop, season, sptype, coloursum, size, clothse, shoplevel, shoptype } });
         },
@@ -188,6 +199,18 @@ export default {
             return {
                 ...state,
                 size: payload,
+            };
+        },
+        updateSysCategory(state, { payload }) {
+            return {
+                ...state,
+                sysCategory: payload,
+            };
+        },
+        updateScoreItem(state, { payload }) {
+            return {
+                ...state,
+                scoreItem: payload,
             };
         },
         updateAllParames(state, { payload }) {

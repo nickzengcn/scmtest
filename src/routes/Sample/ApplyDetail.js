@@ -295,8 +295,8 @@ export class Detail extends PureComponent {
                     </Row>
                 </Card>
                 <Row className="xw-tx-center">
-                    <Button style={{ marginRight: 24 }} onClick={this.handleOk(-1)}>不通过</Button>
-                    <Button style={{ margin: "20px 0 0 " }} type="primary" onClick={this.handleOk(1)}>通过</Button>
+                    <Button onClick={this.handleOk(-1)}>不通过</Button>
+                    <Button style={{ margin: "20px 24px 0 " }} type="primary" onClick={this.handleOk(1)}>通过</Button>
                     <Button onClick={this.handleOk(0)}>待定</Button>
                 </Row>
             </Modal>

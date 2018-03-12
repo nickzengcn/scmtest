@@ -7,6 +7,7 @@ import ApplyForm from './ApplyForm';
 import ApplyDetail from './ApplyDetail';
 import InfiniteScroller from './werewre/Infinite';
 const { TextArea } = Input;
+// import cloneDeep  from 'lodash/cloneDeep';
 // import { handleFormReset, handleSearch } from '../Wave/DemandSearchFilter';
 
 
@@ -40,12 +41,20 @@ export default class Demand extends PureComponent {
         checkedList: ['连衣裙', '套裤'],
         indeterminate: true,
         checkAll: false,
-        
+        category:[],
     };
     
 
     componentDidMount() {
+        const { sysparames: { sysCategory} } = this.props;
+        const category = sysCategory.filter(item=>item.deptlevelid==2)
+        this.setState({
+            category
+        },this.fetchData)
+    }
+    fetchData = ()=>{
         const { dispatch } = this.props;
+        const { category } = this.state;
         dispatch({
             type: 'sampleWerewre/fetch',
             payload: {
@@ -54,51 +63,48 @@ export default class Demand extends PureComponent {
             },
         });
     }
-    renderSimpleForm() {
-        
-        
+    componentWillReceiveProps(next){
+        const { sysparames: { sysCategory} } = this.props;
+        if(sysCategory.length!=next.sysparames.sysCategory.length){
+            this.setState({
+                category:next.sysparames.sysCategory
+            })
+        }
     }
 
-    handleModalVisible = (flag) => {
-        this.setState({
-            modalVisible: !!flag,
+    categoryChange = (index) => (e) => {
+        let { category } = this.state;
+        category[index].checked = e.target.checked;
+        // category[index] = Object.assign({},category[index]);
+        // const checklist = category.filter(item=>item.checked);
+        let newdata = [];
+        category.forEach(element => {
+            newdata.push(element)
         });
-    }
-
-    handleQueryVisible = (flag) => {
         this.setState({
-            queryVisible: !!flag,
-        });
-    }
-
-    handleAddInput = (e) => {
-        this.setState({
-            addInputValue: e.target.value,
-        });
-    }
-    handleTxt = (e) => {
-        this.setState({
-            mask: e.target.value,
-        });
-    }
-    onChange = (checkedList) => {
-        this.setState({
-          checkedList,
-          indeterminate: !!checkedList.length && (checkedList.length < plainOptions.length),
-          checkAll: checkedList.length === plainOptions.length,
+            category:newdata
+            // checkAll: checklist.length === category.length,
         });
       }
-      onCheckAllChange = (e) => {
+    onCheckAllChange = (e) => {
+        let checkAll = e.target.checked;
+        let { category } = this.state;
+        for (const key in category) {
+            if (category.hasOwnProperty(key)) {
+                const element = category[key];
+                element.checked = e.target.checked
+            }
+        }
         this.setState({
-          checkedList: e.target.checked ? plainOptions : [],
-          indeterminate: false,
-          checkAll: e.target.checked,
+          category,
+          checkAll,
         });
     }
 
     render() {
         const { sampleWerewre: { data: { list } }, user, loading } = this.props;
-        const { selectedRows, modalVisible, addInputValue, queryVisible, editItem } = this.state;
+        const { selectedRows, modalVisible, addInputValue, queryVisible, category } = this.state;
+        
         const plainOptions = ['连衣裙', '套裤', '单裙'];
         const defaultCheckedList = ['连衣裙', '套裤'];
 
@@ -108,15 +114,25 @@ export default class Demand extends PureComponent {
                     <div className={styles.tableList}>
                         <div className={styles.tableListForm}>
                             <Checkbox
-                                indeterminate={this.state.indeterminate}
                                 onChange={this.onCheckAllChange}
                                 checked={this.state.checkAll}
                             >
                                 全选
                             </Checkbox>
-                            <CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} />
-                            <Button type="primary" style={{marginLeft:20}}> 查询 </Button>
-                            <Button style={{marginLeft:20}}> 重置 </Button>
+
+                            {category.map((item,index)=>{
+                                return (
+                                    <Checkbox
+                                        key = {item.categoryid}
+                                        onChange={this.categoryChange(index)}
+                                        checked={item.checked}
+                                    >
+                                        {item.categoryname}
+                                    </Checkbox>
+                                )
+                            })}
+                            <Button type="primary" onClick={this.fetchData} style={{marginLeft:20,marginTop:10}}> 查询 </Button>
+                            {/* <Button style={{marginLeft:20}}> 重置 </Button> */}
                         </div>
                         <InfiniteScroller user={user}  data={list} loading={loading} />
                     </div>

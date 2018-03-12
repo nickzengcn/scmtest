@@ -112,7 +112,7 @@ export default class Demand extends PureComponent {
         for (let index = 0; index < list.length; index++) {
             const element = list[index];
             if (element.checked) {
-                ids.push(element.Id);
+                ids.push(element.SampleId);
             }
         }
         ids = ids.join(',')
@@ -126,20 +126,7 @@ export default class Demand extends PureComponent {
         
         this.handleModalVisible(false)
     }
-    handleAdd = () => {
-        this.props.dispatch({
-            type: 'sampleJudge/add',
-            payload: {
-                description: this.state.addInputValue,
-            },
-        });
-
-        message.success('添加成功');
-        this.setState({
-            modalVisible: false,
-        });
-        this.handleModalVisible(false)
-    }
+    
     hanldeDeleteData = item => () => {
         confirm({
             title: '你确定要这么操作',
@@ -193,7 +180,10 @@ export default class Demand extends PureComponent {
         const { sampleJudge: { data: { list } }, user, loading } = this.props;
         const { selectedRows, modalVisible, addInputValue, queryVisible, editItem } = this.state;
         
-
+        const funs = {
+            Check:this.itemCheck,
+        };
+        const length = list.filter(item=>item.checked).length
         return (
             <PageHeaderLayout title="样衣海选决策">
                 <Card bordered={false}>
@@ -207,7 +197,7 @@ export default class Demand extends PureComponent {
                                 海选发布
                             </Button>
                         </div>
-                        <InfiniteScroller handleOpen={this.handleOpen} user={user}  data={list} loading={loading} />
+                        <InfiniteScroller funs={funs} handleOpen={this.handleOpen} user={user}  data={list} loading={loading} />
                     </div>
                 </Card>
                 <Modal
@@ -216,6 +206,9 @@ export default class Demand extends PureComponent {
                     visible={modalVisible}
                     onCancel={() => this.handleModalVisible(false)}
                 >
+                    <Row>
+                        你当前已选择了{length?length:"0"}个样衣。
+                    </Row>
                     <Row className="xw-tx-center" style={{ marginTop: 24 }}>
                         <Button onClick={this.handleGroupSubmit} type="primary" >
                             提交

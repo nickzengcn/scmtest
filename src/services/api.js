@@ -193,6 +193,16 @@ export async function getWaveBandData(parames) {
 }
 
 /**
+ * 获取单个样衣的明细
+ */
+export async function getSingleSample(parames) {
+    const str = getQueryStr(parames);
+    return request(`Scm/Sample/Get${str}`, {
+        method: 'GET',
+    });
+}
+
+/**
  * 获取波段需求列表
  */
 export async function reqWaveBand(parames) {
@@ -256,7 +266,6 @@ export async function getSampleJudgeData(parames) {
     });
 }
 
-
 /**
  * 样衣审批
  */
@@ -268,11 +277,49 @@ export async function reqSampleAudit(parames) {
 }
 
 /**
+ * 生成初选单
+ */
+export async function reqGenBill(parames) {
+    return request(`Scm/Sample/GenBill`, {
+        method: 'POST',
+        body: parames,
+    });
+}
+
+/**
+ * 生成淘汰单
+ */
+export async function reqCheckNo(parames) {
+    return request(`Scm/Sample/CheckNo`, {
+        method: 'POST',
+        body: parames,
+    });
+}
+
+/**
  * 审核信息字典
  */
 export async function reqPhotoCheckList(parames) {
     const str = getQueryStr(parames);
     return request(`Scm/Dict/QueryPhotoCheckList${str}`, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 获取类型
+ */
+export async function getSysCategory(){
+    return request(`Scm/Dict/GetSysCategory`, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 获取打分项目
+ */
+export async function reqScoreItem(){
+    return request(`Scm/Dict/GetScoreItem`, {
         method: 'GET',
     });
 }
@@ -288,9 +335,9 @@ export async function photocheckModel(parames) {
 }
 
 /**
- * 样衣总分操作
+ * 样衣一审list
  */
-export async function getSampleScore(parames) {
+export async function reqFirstJudgeList(parames) {
     const str = getQueryStr(parames);
     return request(`scm/Sample/ScoreImageList${str}`, {
         method: 'GET',

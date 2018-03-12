@@ -1,4 +1,4 @@
-import { getSampleJudgeData } from '../services/api';
+import { reqFirstJudgeList } from '../services/api';
 
 const namespace = 'firstJudge';
 
@@ -22,7 +22,7 @@ export default {
                 length: 9,
             }
         }
-      const response = yield call(getSampleJudgeData, payload);
+      const response = yield call(reqFirstJudgeList, payload);
       yield put({
         type: 'save',
         payload: response,

@@ -8,6 +8,7 @@ import style from '../style.less';
 import InfiniteScroll from 'react-infinite-scroller';
 import { LazyLoadImg, getJudge } from '../../../utils/ajust';
 import { Detail } from './Detail';
+import { LLContent } from '../InfiniteScroller'
 
 
 
@@ -25,14 +26,13 @@ class Cards extends PureComponent {
         <Col sm={12} md={8} lg={6}>
           <Card
             hoverable
-            className={style.main3}
+            className={style.main}
                     // style={{ width: 300 }}
-            cover={<LazyLoadImg />}
-          >
+                    cover={<LLContent onClick={this.handleClick} />}
+            >
             <Meta
                 title={<Title data={data} />}
             />
-            <Checkbox onChange={this.handleChange} checked={data.checked}  className={style.chosen}/>
           </Card>
         </Col>
       );
@@ -60,9 +60,7 @@ export default class InfiniteList extends React.Component {
       modalData: {},
     }
     handleOpenModal = item => () => {
-      this.props.funs.Audit({
-        modal:true,data:item
-      })
+      this.props.funs.Audit(item)
     }
     handleCheck = (item,index) => (e) => {
       this.props.funs.Check({
@@ -108,7 +106,7 @@ export default class InfiniteList extends React.Component {
 
             {loading && hasMore && <Spin className="demo-loading" />}
           </InfiniteScroll>
-          {/* <Detail user={user} funs={funs} modal={modal} close={this.handleCloseModal} data={modalData} /> */}
+          <Detail user={user} funs={funs} modal={modal} close={this.handleCloseModal} data={modalData} />
         </div>
       );
     }

@@ -119,7 +119,7 @@ export const getRouterData = (app) => {
         },
         //样衣一审打分
         '/judgeone/erwerwe': {
-            component: dynamicWrapper(app, ['sampleApply'], () => import('../routes/Sample/Erwerwe')),
+            component: dynamicWrapper(app, ['firstJudge'], () => import('../routes/Sample/Erwerwe')),
         },
         //样衣一审决策(待处理)
         '/judgeone/werewrsscdd': {

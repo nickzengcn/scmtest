@@ -3,19 +3,19 @@ import { connect } from 'dva';
 import { Modal, Card, Badge, Table, Button, Divider, Row, Col, Layout, Input, Checkbox } from 'antd';
 import DescriptionList from '../../../components/DescriptionList';
 import { sortable } from 'react-sortable';
-import { LazyLoadImg, getColumns, getWidthSum, handleGetTime, getDateFromTime, getJudge, ifNotJudge  } from '../../../utils/ajust';
+import { getColumns, getWidthSum, handleGetTime, getDateFromTime, getJudge, ifNotJudge, LazyLoadImg } from '../../../utils/ajust';
 import style from '../style.less';
 const { TextArea } = Input;
 
 const { Description } = DescriptionList;
 // import { Button } from 'antd/lib/radio';
 
-@connect(({ sampleJudge, loading }) => ({
-    item: sampleJudge.Query,
+@connect(({ firstJudge, loading }) => ({
+    item: firstJudge.Query,
 }))
 export default class DemandDetail extends PureComponent {
     close = () => {
-        dispatch({ type: 'sampleJudge/closeQuery' });
+        dispatch({ type: 'firstJudge/closeQuery' });
     }
     render() {
         return (
@@ -37,35 +37,40 @@ class Item extends React.Component {
 var SortableItem = sortable(Item);
 
 
-@connect(({ sampleJudge, sysparames, loading }) => ({
-    item: sampleJudge.item,
-    modal: sampleJudge.modal,
-    loading: loading.models.sampleJudge,
+@connect(({ firstJudge, sysparames, loading }) => ({
+    item: firstJudge.item,
+    modal: firstJudge.modal,
+    scoreItem: sysparames.scoreItem,
 }))
 export class Detail extends PureComponent {
     state = {
         mask: undefined,
         fileList: [],
+        scoreItem: [],
     }
-    handleOk = () => {
-        const { SampleId } = this.props.item;
+    componentDidMount(){
+        if(this.props.scoreItem.length==0){
+            this.props.dispatch({
+                type:'sysparames/getScoreItem'
+            })
+        }
+    }
+    handleOk = (value) =>() => {
+        const { Id } = this.props.item;
+        const { scoreItem } = this.state;
+        for (let index = 0; index < scoreItem.length; index++) {
+            const element = scoreItem[index];
+            element.sampleId = Id
+        }
+        const payload = {
+            data: scoreItem,
+            type: value,
+        };
         this.props.dispatch({
-            type: 'sampleJudge/publish',
-            payload: {
-                ids: SampleId,
-            },
+            type: 'firstJudge/audit',
+            payload
         })
     }
-    handleTaotai =  () => {
-        const { SampleId } = this.props.item;
-        this.props.dispatch({
-            type: 'sampleJudge/taotai',
-            payload: {
-                ids: SampleId,
-            },
-        });
-    }
-    
     maskChange = (e) => {
         this.setState({
             mask: e.target.value
@@ -79,14 +84,18 @@ export class Detail extends PureComponent {
     }
     close = () => {
         this.props.dispatch({
-            type: 'sampleJudge/closeItem',
+            type: 'firstJudge/setAudit',
             payload: {
                 modal: false,
                 data: {},
             }
         })
     }
-    
+    onChangeCheck = (index)=>(e)=>{
+        console.log(e.target.checked)
+        this.state.scoreItem[index].checkflag = e.target.checked?1:0;
+        console.log(this.state.scoreItem)
+    }
     render() {
         console.log(this.props)
         const {
@@ -97,8 +106,21 @@ export class Detail extends PureComponent {
         } = this.props.item;
         const { mask, fileList } = this.state;
         let items = fileList.length > 0 ? fileList : [ImageIdPath1, ImageIdPath2, ImageIdPath3];
-        const { modal,loading } = this.props;
-   
+        const { modal } = this.props;
+        const { scoreItem } = this.props;
+        // const { name, userid } = currentUser;
+        if(this.state.scoreItem.length==0){
+            this.state.scoreItem = this.props.scoreItem;
+        }
+        // 默认列表为选中
+
+        const columns = [
+            { dataIndex: 'seqno', title: '序号' },
+            { dataIndex: 'checkinfo', title: '打分项目' },
+            { dataIndex: 'checkflag', title: '是否通过',render:(value,row,index)=>{
+                return <Checkbox value={value==0} defaultChecked={true} onChange={this.onChangeCheck(index)} />
+            } }
+        ]
         // console.log(user)
         return (
             <Modal
@@ -108,6 +130,7 @@ export class Detail extends PureComponent {
                 visible={modal}
                 onCancel={() => this.close()}
             >
+                <Card title="基础资料" style={{marginBottom:20}}>
                     <Row className={style.row}>
                         <Col className={style.lable} xs={24}
                             sm={7}>
@@ -227,11 +250,39 @@ export class Detail extends PureComponent {
                             {jyfs == 1 ? '试销' : '其他'}
                         </Col>
                     </Row>
-                    <Row className="xw-tx-center">
-                        <Button style={{ marginRight: 24 }} loading={loading} type="primary"  onClick={this.handleOk}>生成初选单</Button>
-                        <Button style={{ margin: "20px 0 0 " }} loading={loading} onClick={this.handleTaotai}>淘汰</Button>
+                    {/* <Row className={style.row}>
+                        <Col className={style.lable} xs={24}
+                            sm={7}>
+                            备注：
+                        </Col>
+                        <Col xs={24}
+                            sm={12}
+                            md={10}>
+                            <TextArea value={mask ? mask : note} onChange={this.maskChange} />
+                        </Col>
+                    </Row> */}
+                </Card>
+                <Card title="审核信息">
+                    <Row>
+                    <Table
+                        className="xw-table"
+                        rowKey="ID"
+                        // bordered
+                        // loading={loading}
+                                // rowKey={record => record.key}
+                        dataSource={this.state.scoreItem}
+                        columns={columns}
+                        pagination={false}
+                        // onChange={this.handleTableChange}
+                        // scroll={{ x: width }}
+                    />
                     </Row>
-
+                </Card>
+                <Row className="xw-tx-center">
+                    <Button onClick={this.handleOk(-1)}>不通过</Button>
+                    <Button style={{ margin: "20px 24px 0 " }} type="primary" onClick={this.handleOk(1)}>通过</Button>
+                    <Button onClick={this.handleOk(0)}>待定</Button>
+                </Row>
             </Modal>
         );
     }
